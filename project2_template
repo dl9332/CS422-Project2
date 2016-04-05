@@ -1,0 +1,292 @@
+
+<!-- template for Project 2 - CS 422 - Spring 2016 - Group 2 -->
+
+<!DOCTYPE html>    
+<head>
+    <meta charset="utf-8">
+    <title>fabric.js project template</title>
+  
+  <!-- Get version 1.5.0 of Fabric.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js" ></script>
+
+</head>
+
+<body>
+    <!-- canvas tag for Fabric.js to draw into -->
+    <!-- set this to some appropriate size for your development work -->
+    <!-- but keep the same aspect ratio -->
+    <!-- we will use width="2714" height="2200" for presentations and evaluation -->
+    <div class="canvas-container" style="width: 2714px; height: 2200px; position: relative; -webkit-user-select: none;" >
+      <canvas id="c" width="2714" height="2200" style="border: 2px solid black; position: absolute; width: 2714px; height: 2200px; left: 0px; top: 0px; -webkit-user-select: none;" class="lower-canvas" ></canvas>
+    </div>
+
+ 
+<script>
+
+// the aspect ratios given here are not quite tall enough for a 36" x 80" door
+// we are assuming bottom 15 inches of the door are not part of the display. 
+// that part contains lots of necessary electronics so the bottom of the door
+// sits off the bottom of our display wall. You are implementing the interface
+// for the top 65" of the display / door
+
+
+// within the code below I assume I am drawing into a 1220x990 box
+// then I can scale the group to whatever size the final canvas is
+  var localHeight = 2200;
+  var localWidth = 2714;
+  var doorWidth = 1235;
+  var topLeftInsideDoor = .2 * (localWidth-(2*doorWidth));
+  var topLeftOutisdeDoor = localWidth - topLeftInsideDoor - doorWidth;
+  var charmAppHW = doorWidth / 6;
+  var quarterDoorHeight = localHeight / 4;
+  var charmOffsetY = (localHeight - (localHeight * .75) - charmAppHW) / 2;
+  var charmOffsetX = doorWidth / 18;
+  var doorKnobStartY = .47 * localHeight;
+  var doorKnobRadius = 75;
+  var insideKnobStartX = topLeftInsideDoor + doorWidth - doorKnobRadius - charmOffsetX;
+  var outsideKnobStartX = topLeftOutisdeDoor + doorKnobRadius + charmOffsetX;
+  var userPic, emergencyPic, appPic, settingsPic;
+  
+
+  var canvas = this.__canvas = new fabric.Canvas('c');
+
+  // set background to blue to make it easier to see it
+  canvas.backgroundColor = "#DDDDDD";  // light grey
+
+// need 36 wide instead of 40 as now
+
+var insideDoor = new fabric.Rect({
+  left: topLeftInsideDoor,
+  top: 0,
+  fill: 'white',
+  stroke: 'black',
+  width: doorWidth,
+  height: localHeight,
+  angle: 0
+});
+
+// the doors will not be selectable or movable
+insideDoor.hasControls = insideDoor.hasBorders = false;
+insideDoor.lockMovementX = insideDoor.lockMovementY = true;
+
+
+var outsideDoor = new fabric.Rect({
+  left: topLeftOutisdeDoor,
+  top: 0,
+  fill: 'white',
+  stroke: 'black',
+  width: doorWidth,
+  height: localHeight,
+  angle: 0
+});
+
+outsideDoor.hasControls = outsideDoor.hasBorders = false;
+outsideDoor.lockMovementX = outsideDoor.lockMovementY = true;
+
+  
+// create a circle for the shower head location
+var insideHandle = new fabric.Circle({
+  radius: doorKnobRadius, fill: 'grey', left: insideKnobStartX , top: doorKnobStartY,   originX: 'center',
+  originY: 'center'
+});
+
+// create a circle for the shower head location
+var outsideHandle = new fabric.Circle({
+  radius: doorKnobRadius, fill: 'grey', left: outsideKnobStartX, top: doorKnobStartY,   originX: 'center',
+  originY: 'center'
+});
+
+
+/*-----------------------------------------------------------------
+* CHARMS BAR
+*  -appIcon
+*  -emergencyIcon
+*  -settingsIcon
+*  -userIcon
+*///---------------------------------------------------------------
+
+
+var userIcon = new fabric.Image.fromURL('single.png', function(img) {
+  img.set({
+    left: topLeftInsideDoor + charmOffsetX,
+    top: charmOffsetY,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  userPic = canvas.getActiveObject();
+  userPic.on('moving', function(){
+    emergencyPic.top = userPic.getTop() + quarterDoorHeight;
+    appPic.top = emergencyPic.getTop() + quarterDoorHeight;
+    settingsPic.top = appPic.getTop() + quarterDoorHeight;
+
+    canvas.renderAll();
+    fabric.util.requestAnimFrame(animate);
+  });
+  userPic.lockMovementX = true;
+  userPic.lockMovementY = false;}
+);
+
+
+var emergencyIcon =  new fabric.Image.fromURL('shield.png', function(img) {
+  img.set({
+    left: topLeftInsideDoor + charmOffsetX,
+    top: quarterDoorHeight + charmOffsetY,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  emergencyPic = canvas.getActiveObject();
+  emergencyPic.on('moving', function(){
+    userPic.top = emergencyPic.getTop() - quarterDoorHeight;
+    appPic.top = emergencyPic.getTop() + quarterDoorHeight;
+    settingsPic.top = appPic.getTop() + quarterDoorHeight;
+
+    canvas.renderAll();
+    fabric.util.requestAnimFrame(animate);
+  });
+  emergencyPic.lockMovementX = true; 
+  emergencyPic.lockMovementY = false;}
+);
+
+
+var appIcon = new fabric.Image.fromURL('app.png', function(img) {
+  img.set({
+    left: topLeftInsideDoor + charmOffsetX,
+    top: (quarterDoorHeight * 2) + charmOffsetY,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  appPic = canvas.getActiveObject();
+  appPic.on('moving', function(){
+    userPic.top = emergencyPic.getTop() - quarterDoorHeight;
+    settingsPic.top = appPic.getTop() + quarterDoorHeight;
+    emergencyPic.top = appPic.getTop() - quarterDoorHeight;
+
+    canvas.renderAll();
+    fabric.util.requestAnimFrame(animate);
+  });
+  appPic.lockMovementX = true;
+  appPic.lockMovementY = false;}
+);
+
+
+var settingsIcon = new fabric.Image.fromURL('settings.png', function(img) {
+  img.set({
+    left: topLeftInsideDoor + charmOffsetX,
+    top: (quarterDoorHeight * 3) + charmOffsetY,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  settingsPic = canvas.getActiveObject();
+  settingsPic.on('moving', function(){
+    userPic.top = emergencyPic.getTop() - quarterDoorHeight;
+    appPic.top = settingsPic.getTop() - quarterDoorHeight;
+    emergencyPic.top = appPic.getTop() - quarterDoorHeight;
+
+    canvas.renderAll();
+    fabric.util.requestAnimFrame(animate);
+  });
+  settingsPic.lockMovementX = true;
+  settingsPic.lockMovementY = false;}
+);
+
+
+
+/*function slideDown()
+{
+  var tempGroup = charmsBar;
+
+  charmsBar = new fabric.Group([ charmsBar[3], charmsBar[0], charmsBar[1], charmsBar[2] ], {
+    left: tempGroup.getLeft(),
+    top: tempGroup.getTop()
+  });
+}
+
+function slideUp()
+{
+  var tempGroup = charmsBar;
+
+  charmsBar = new fabric.Group([ charmsBar[1], charmsBar[2], charmsBar[3], charmsBar[0] ], {
+    left: tempGroup.getLeft(),
+    top: tempGroup.getTop()
+  });
+}*/
+
+function moveCharms()
+{
+  /*if(y < charmAppHW)
+  {
+    slideUp()
+  }
+  else if(y > localHeight - charmAppHW)
+  {
+    slideDown()
+  }*/
+
+
+}
+
+
+//--------------------END-CHARMS-BAR-------------------------------
+
+
+// add all of the elements to the canvas
+//canvas.add(charmsBar);
+canvas.add(insideDoor);
+canvas.add(outsideDoor);
+canvas.add(insideHandle);
+canvas.add(outsideHandle);
+
+
+// code adapted from http://jsfiddle.net/tornado1979/39up3jcm/
+// this code deals with scaling all the elements on the canvas
+
+function zoomAll(SCALE_FACTOR) {
+
+      var objects = canvas.getObjects();
+      for (var i in objects) {
+          var scaleX = objects[i].scaleX;
+          var scaleY = objects[i].scaleY;
+          var left = objects[i].left;
+          var top = objects[i].top;
+
+          var tempScaleX = scaleX * SCALE_FACTOR;
+          var tempScaleY = scaleY * SCALE_FACTOR;
+          var tempLeft = left * SCALE_FACTOR;
+          var tempTop = top * SCALE_FACTOR;
+
+          objects[i].scaleX = tempScaleX;
+          objects[i].scaleY = tempScaleY;
+          objects[i].left = tempLeft;
+          objects[i].top = tempTop;
+
+          objects[i].setCoords();
+      }
+  
+      canvas.renderAll();
+  }
+
+// draw everything at the appropriate scale for this canvas
+zoomAll(canvas.height / localHeight);
+
+
+</script>
+
+</body>
+      
+</html>
