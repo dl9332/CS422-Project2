@@ -106,7 +106,7 @@ var outsideHandle = new fabric.Circle({
 *///---------------------------------------------------------------
 
 
-var userIcon = new fabric.Image.fromURL('single.png', function(img) {
+var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
     top: charmOffsetY,
@@ -131,7 +131,7 @@ var userIcon = new fabric.Image.fromURL('single.png', function(img) {
 );
 
 
-var emergencyIcon =  new fabric.Image.fromURL('shield.png', function(img) {
+var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
     top: quarterDoorHeight + charmOffsetY,
@@ -156,7 +156,7 @@ var emergencyIcon =  new fabric.Image.fromURL('shield.png', function(img) {
 );
 
 
-var appIcon = new fabric.Image.fromURL('app.png', function(img) {
+var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
     top: (quarterDoorHeight * 2) + charmOffsetY,
@@ -181,7 +181,7 @@ var appIcon = new fabric.Image.fromURL('app.png', function(img) {
 );
 
 
-var settingsIcon = new fabric.Image.fromURL('settings.png', function(img) {
+var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
     top: (quarterDoorHeight * 3) + charmOffsetY,
