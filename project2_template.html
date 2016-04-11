@@ -46,11 +46,17 @@
   var insideKnobStartX = topLeftInsideDoor + doorWidth - doorKnobRadius - charmOffsetX;
   var outsideKnobStartX = topLeftOutisdeDoor + doorKnobRadius + charmOffsetX;
   var userPic, emergencyPic, appPic, settingsPic;
-  var app = [];
-  app.push({Icon:"app",fp:'resources/app',active:false,create:false});
-  
+  var charmBar = [];
+  var apps = [];
+  charmBar.push({icon:"app",fp:'resources/app',active:false,create:false});
+  apps.push({icon:"weather",fp:'resources/weather',active:false,create:false});
+  apps.push({icon:"clock",fp:'resources/clock',active:false,create:false});
+  apps.push({icon:"calender",fp:'resources/weather',active:false,create:false});
+  apps.push({icon:"door cam",fp:'resources/weather',active:false,create:false});
+  apps.push({icon:"notes",fp:'resources/weather',active:false,create:false});
+  apps.push({icon:"home",fp:'resources/weather',active:false,create:false});
 
-  var canvas = this.__canvas = new fabric.Canvas('c');
+ var canvas = this.__canvas = new fabric.Canvas('c');
 
   // set background to blue to make it easier to see it
   canvas.backgroundColor = "#DDDDDD";  // light grey
@@ -124,9 +130,9 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     emergencyPic.top = userPic.getTop() + quarterDoorHeight;
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
-
+    canvas.deactivateAll();
     canvas.renderAll();
-    fabric.util.requestAnimFrame(animate);
+    //fabric.util.requestAnimFrame(animate);
   });
   userPic.lockMovementX = true;
   userPic.lockMovementY = false;}
@@ -201,19 +207,27 @@ function createAppIcon(icon){
                     settingsPic.top = appPic.getTop() + quarterDoorHeight;
                     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
 
+                    canvas.deactivateAll();
                     canvas.renderAll();
-                    fabric.util.requestAnimFrame(animate);
+                    //fabric.util.requestAnimFrame(animate);
                 });
 
                 appPic.on('selected',function(){
-                    console.log("app's have been selected")
-                    if(app[0].active==true) {
-                        app[0].active = false;
-                        activeIcon(app[0]);
+                    console.log("app's have been selected");
+                    if(charmBar[0].active==true) {
+
+                        charmBar[0].active = false;
+                        activeIcon(charmBar[0]);
+                        canvas.remove(weatPic);
+
                     }
-                    else if(app[0].active==false) {
-                        app[0].active = true;
-                        activeIcon(app[0]);
+                    else if(charmBar[0].active==false) {
+                        charmBar[0].active = true;
+                        activeIcon(charmBar[0]);
+                        console.log("here");
+                        activeIcon(apps[0]);
+                        //canvas.remove(appPic);*/
+
                     }
 
                 })
@@ -224,7 +238,7 @@ function createAppIcon(icon){
     );
 
 }
-createAppIcon(app[0]);
+createAppIcon(charmBar[0]);
 
 /*var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   img.set({
@@ -285,8 +299,9 @@ var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(i
     appPic.top = settingsPic.getTop() - quarterDoorHeight;
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
 
-      canvas.renderAll();
-    fabric.util.requestAnimFrame(animate);
+    canvas.deactivateAll();
+    canvas.renderAll();
+    //fabric.util.requestAnimFrame(animate);
   });
   settingsPic.lockMovementX = true;
   settingsPic.lockMovementY = false;}
@@ -330,45 +345,83 @@ function moveCharms()
 //----------------------------Ryan's Code Start----------------------------------------
 
  function activeIcon(app){
-     if(app.icon = "app")
+     if(app.icon ==  'app')
        createAppIcon(app);
-     canvas.deactivateAll();
 
+    else if(app.icon == 'weather')
+     createWeather(app);
+
+     canvas.deactivateAll();
  }
 
-/*var appIcon2 = new fabric.Image.fromURL('resources/app2.png', function(img) {
-            img.set({
-                left: topLeftInsideDoor + charmOffsetX,
-                top: (quarterDoorHeight * 2) + charmOffsetY,
+function createWeather(icon) {
+
+  iconPath = icon.fp;
+  //canvas.remove(weatPic);
+  if(icon.active==true) {
+    iconPath = iconPath + '2';
+  }
+
+
+  console.log(iconPath);
+
+  weatIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+            if(icon.create==true) {
+              img.set({
+                left: weatIcon.left,
+                top: weatIcon.top,
                 width: charmAppHW,
                 height: charmAppHW,
                 originX: 'left',
                 originY: 'top',
-                visible: false
-            });
+                visible: true
+              });
+            }
+            else {
+              img.set({
+                left: appPic.left *3 /*topLeftInsideDoor+(doorWidth/4)*/,
+                top: appPic.top * .8/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                width: charmAppHW,
+                height: charmAppHW,
+                originX: 'left',
+                originY: 'top',
+                visible: true
+              });
+              //icon.create = true;
+            }
+
+
             canvas.add(img).setActiveObject(img);
-            appPic2 = canvas.getActiveObject();
+            weatPic = canvas.getActiveObject();
+           /* appPic.on('moving', function(){
+              userPic.top = emergencyPic.getTop() - quarterDoorHeight;
+              settingsPic.top = appPic.getTop() + quarterDoorHeight;
+              emergencyPic.top = appPic.getTop() - quarterDoorHeight;
 
-            appPic2.on('moving', function(){
-                userPic.top = emergencyPic.getTop() - quarterDoorHeight;
-                settingsPic.top = appPic2.getTop() + quarterDoorHeight;
-                emergencyPic.top = appPic2.getTop() - quarterDoorHeight;
-
-                canvas.renderAll();
-                fabric.util.requestAnimFrame(animate);
+              canvas.deactivateAll();
+              canvas.renderAll();
+              //fabric.util.requestAnimFrame(animate);
             });
-            appPic2.on('selected',function(){
-                console.log("appIcon has been deactivated")
-                //temp = appPic;
-                appPic.visible = true;
-                appPic2.visible = false;
-                //appPic2 = temp;
-                canvas.deactivateAll();
-            })
-            appPic2.lockMovementX = true;
-            appPic2.lockMovementY = false;}
 
-);*/
+            appPic.on('selected',function(){
+              console.log("app's have been selected")
+              if(app[0].active==true) {
+                app[0].active = false;
+                activeIcon(charmBar[0]);
+              }
+              else if(app[0].active==false) {
+                app[0].active = true;
+                activeIcon(charmBar[0]);
+              }
+
+            })*/
+
+
+            weatPic.lockMovementX = true;
+            weatPic.lockMovementY = false;}
+  );
+
+}
 
 
 
