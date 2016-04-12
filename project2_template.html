@@ -51,10 +51,10 @@
   charmBar.push({icon:"app",fp:'resources/app',active:false,create:false});
   apps.push({icon:"weather",fp:'resources/weather',active:false,create:false});
   apps.push({icon:"clock",fp:'resources/clock',active:false,create:false});
-  apps.push({icon:"calender",fp:'resources/weather',active:false,create:false});
-  apps.push({icon:"door cam",fp:'resources/weather',active:false,create:false});
-  apps.push({icon:"notes",fp:'resources/weather',active:false,create:false});
-  apps.push({icon:"home",fp:'resources/weather',active:false,create:false});
+  apps.push({icon:"calender",fp:'resources/calender',active:false,create:false});
+  apps.push({icon:"door cam",fp:'resources/doorCam',active:false,create:false});
+  apps.push({icon:"notes",fp:'resources/notes',active:false,create:false});
+  apps.push({icon:"home",fp:'resources/home',active:false,create:false});
 
  var canvas = this.__canvas = new fabric.Canvas('c');
 
@@ -219,6 +219,11 @@ function createAppIcon(icon){
                         charmBar[0].active = false;
                         activeIcon(charmBar[0]);
                         canvas.remove(weatPic);
+                        canvas.remove(calenderPic);
+                        canvas.remove(clockPic);
+                        canvas.remove(doorCamPic);
+                        canvas.remove(notesPic);
+                        canvas.remove(homePic);
 
                     }
                     else if(charmBar[0].active==false) {
@@ -226,6 +231,11 @@ function createAppIcon(icon){
                         activeIcon(charmBar[0]);
                         console.log("here");
                         activeIcon(apps[0]);
+                        activeIcon(apps[1]);
+                        activeIcon(apps[2]);
+                        activeIcon(apps[3]);
+                        activeIcon(apps[4]);
+                        activeIcon(apps[5]);
                         //canvas.remove(appPic);*/
 
                     }
@@ -351,8 +361,25 @@ function moveCharms()
     else if(app.icon == 'weather')
      createWeather(app);
 
+    else if(app.icon == 'clock')
+     createClock(app);
+
+    else if(app.icon == 'calender')
+      createCalender(app);
+
+     else if(app.icon == 'door cam')
+         createDoorCam(app);
+
+     else if(app.icon == 'notes')
+         createNotes(app);
+
+     else if(app.icon == 'home')
+         createHome(app);
      canvas.deactivateAll();
  }
+
+
+
 
 function createWeather(icon) {
 
@@ -366,21 +393,10 @@ function createWeather(icon) {
   console.log(iconPath);
 
   weatIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-            if(icon.create==true) {
-              img.set({
-                left: weatIcon.left,
-                top: weatIcon.top,
-                width: charmAppHW,
-                height: charmAppHW,
-                originX: 'left',
-                originY: 'top',
-                visible: true
-              });
-            }
-            else {
+
               img.set({
                 left: appPic.left *3 /*topLeftInsideDoor+(doorWidth/4)*/,
-                top: appPic.top * .8/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                top: appPic.top - 200/*- (appPic.top/6)*//*(quarterDoorHeight * 1.5) + charmOffsetY*/,
                 width: charmAppHW,
                 height: charmAppHW,
                 originX: 'left',
@@ -388,43 +404,183 @@ function createWeather(icon) {
                 visible: true
               });
               //icon.create = true;
-            }
-
 
             canvas.add(img).setActiveObject(img);
             weatPic = canvas.getActiveObject();
-           /* appPic.on('moving', function(){
-              userPic.top = emergencyPic.getTop() - quarterDoorHeight;
-              settingsPic.top = appPic.getTop() + quarterDoorHeight;
-              emergencyPic.top = appPic.getTop() - quarterDoorHeight;
 
-              canvas.deactivateAll();
-              canvas.renderAll();
-              //fabric.util.requestAnimFrame(animate);
-            });
-
-            appPic.on('selected',function(){
-              console.log("app's have been selected")
-              if(app[0].active==true) {
-                app[0].active = false;
-                activeIcon(charmBar[0]);
-              }
-              else if(app[0].active==false) {
-                app[0].active = true;
-                activeIcon(charmBar[0]);
-              }
-
-            })*/
-
-
-            weatPic.lockMovementX = true;
+            weatPic.lockMovementX = false;
             weatPic.lockMovementY = false;}
   );
 
 }
 
 
+function createClock(icon) {
 
+    iconPath = icon.fp;
+    //canvas.remove(weatPic);
+    if(icon.active==true) {
+        iconPath = iconPath + '2';
+    }
+
+
+    console.log(iconPath);
+
+    clockIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+
+                img.set({
+                    left: appPic.left *5 /*topLeftInsideDoor+(doorWidth/4)*/,
+                    top: appPic.top - 200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW,
+                    height: charmAppHW,
+                    originX: 'left',
+                    originY: 'top',
+                    visible: true
+                });
+                //icon.create = true;
+
+                canvas.add(img).setActiveObject(img);
+                clockPic = canvas.getActiveObject();
+
+                clockPic.lockMovementX = false;
+                clockPic.lockMovementY = false;}
+    );
+
+}
+
+function createCalender(icon) {
+
+    iconPath = icon.fp;
+    //canvas.remove(weatPic);
+    if(icon.active==true) {
+        iconPath = iconPath + '2';
+    }
+
+
+    console.log(iconPath);
+
+    calenderIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+
+                img.set({
+                    left: appPic.left *7 /*topLeftInsideDoor+(doorWidth/4)*/,
+                    top: appPic.top - 200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW,
+                    height: charmAppHW,
+                    originX: 'left',
+                    originY: 'top',
+                    visible: true
+                });
+                //icon.create = true;
+
+                canvas.add(img).setActiveObject(img);
+                calenderPic = canvas.getActiveObject();
+
+                calenderPic.lockMovementX = true;
+                calenderPic.lockMovementY = true;}
+    );
+
+}
+
+
+function createDoorCam(icon) {
+
+    iconPath = icon.fp;
+    //canvas.remove(weatPic);
+    if(icon.active==true) {
+        iconPath = iconPath + '2';
+    }
+
+
+    console.log(iconPath);
+
+    doorCamIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+
+                img.set({
+                    left: appPic.left *3 /*topLeftInsideDoor+(doorWidth/4)*/,
+                    top: appPic.top *1/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW,
+                    height: charmAppHW,
+                    originX: 'left',
+                    originY: 'top',
+                    visible: true
+                });
+                //icon.create = true;
+
+                canvas.add(img).setActiveObject(img);
+                doorCamPic = canvas.getActiveObject();
+
+                doorCamPic.lockMovementX = true;
+                doorCamPic.lockMovementY = true;}
+    );
+
+}
+
+
+function createNotes(icon) {
+
+    iconPath = icon.fp;
+    //canvas.remove(weatPic);
+    if(icon.active==true) {
+        iconPath = iconPath + '2';
+    }
+
+
+    console.log(iconPath);
+
+    notesIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+
+                img.set({
+                    left: appPic.left *5 /*topLeftInsideDoor+(doorWidth/4)*/,
+                    top: appPic.top * 1/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW,
+                    height: charmAppHW,
+                    originX: 'left',
+                    originY: 'top',
+                    visible: true
+                });
+                //icon.create = true;
+
+                canvas.add(img).setActiveObject(img);
+                notesPic = canvas.getActiveObject();
+
+                notesPic.lockMovementX = true;
+                notesPic.lockMovementY = true;}
+    );
+
+}
+
+function createHome(icon) {
+
+    iconPath = icon.fp;
+    //canvas.remove(weatPic);
+    if(icon.active==true) {
+        iconPath = iconPath + '2';
+    }
+
+
+    console.log(iconPath);
+
+    homeIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+
+                img.set({
+                    left: appPic.left *7 /*topLeftInsideDoor+(doorWidth/4)*/,
+                    top: appPic.top * 1/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW,
+                    height: charmAppHW,
+                    originX: 'left',
+                    originY: 'top',
+                    visible: true
+                });
+                //icon.create = true;
+
+                canvas.add(img).setActiveObject(img);
+                homePic = canvas.getActiveObject();
+
+                homePic.lockMovementX = true;
+                homePic.lockMovementY = true;}
+    );
+
+}
 
 
 
