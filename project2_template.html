@@ -130,7 +130,9 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     emergencyPic.top = userPic.getTop() + quarterDoorHeight;
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
-    canvas.deactivateAll();
+      updateAppPos();
+
+      canvas.deactivateAll();
     canvas.renderAll();
     //fabric.util.requestAnimFrame(animate);
   });
@@ -156,6 +158,7 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
 
+      updateAppPos();
     canvas.renderAll();
     fabric.util.requestAnimFrame(animate);
   });
@@ -207,6 +210,7 @@ function createAppIcon(icon){
                     settingsPic.top = appPic.getTop() + quarterDoorHeight;
                     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
 
+                    updateAppPos();
                     canvas.deactivateAll();
                     canvas.renderAll();
                     //fabric.util.requestAnimFrame(animate);
@@ -308,7 +312,7 @@ var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(i
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
     appPic.top = settingsPic.getTop() - quarterDoorHeight;
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
-
+      updateAppPos();
     canvas.deactivateAll();
     canvas.renderAll();
     //fabric.util.requestAnimFrame(animate);
@@ -582,6 +586,15 @@ function createHome(icon) {
 
 }
 
+function updateAppPos(){
+    weatPic.top = appPic.top - 200;
+    clockPic.top = appPic.top - 200;
+    calenderPic.top = appPic.top - 200;
+    doorCamPic.top = appPic.top;
+    notesPic.top = appPic.top;
+    homePic.top = appPic.top;
+
+}
 
 
 
