@@ -64,6 +64,12 @@
   apps[4].push({icon:"notes",fp:'resources/notes',active:false,create:false});
   apps[5].push({icon:"home",fp:'resources/home',active:false,create:false});
 
+  apps[0].push({icon:"weatMenu",fp:'resources/weatMenu',active:false,create:false});
+  apps[0].push({icon:"options",fp:'resources/options',active:false,create:false});
+  apps[0].push({icon:"weathAdd",fp:'resources/weathAdd',active:false,create:false});
+  apps[0].push({icon:"add",fp:'resources/add',active:false,create:false});
+
+
   apps[3].push({icon:"mirror",fp:'resources/mirror',active:false,create:false});
   apps[3].push({icon:"peepCam",fp:'resources/peepCam',active:false,create:false});
   apps[3].push({icon:"back",fp:'resources/back',active:false,create:false});
@@ -379,6 +385,82 @@ function createApps(){
 }
 
 createApps();
+createWeatherApp();
+function createWeatherApp(){
+    iconPath = apps[0][1].fp;
+    //canvas.remove(weatPic);
+    console.log(iconPath);
+
+     weatherAppMain= new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({
+                    left: appPic.left *3 /*topLeftInsideDoor+(doorWidth/4)*/,
+                    top: appPic.top -200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW*3,
+                    height: charmAppHW,
+                    originX: 'left',
+                    originY: 'top',
+                    visible: true
+                });
+                canvas.add(img).setActiveObject(img);
+                weatAppPic = canvas.getActiveObject();
+                 weatAppPic.lockMovementX = true;
+                 weatAppPic.lockMovementY = false;}
+    );
+
+
+    iconPath = apps[0][2].fp;
+    console.log(iconPath);
+
+    optionsIcon= new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({
+                    left: appPic.left *7 /*topLeftInsideDoor+(doorWidth/4)*/,
+                    top: appPic.top -200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW-100,
+                    height: charmAppHW-100,
+                    originX: 'left',
+                    originY: 'top',
+                    visible: true
+                });
+                canvas.add(img).setActiveObject(img);
+                optionsPic = canvas.getActiveObject();
+
+                optionsPic.on('selected',function(){
+
+                    canvas.deactivateAll();
+
+                })
+
+                optionsPic.lockMovementX = true;
+                optionsPic.lockMovementY = false;}
+    );
+
+    iconPath = apps[0][3].fp;
+    console.log(iconPath);
+
+    addIcon= new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({
+                    left: appPic.left *7 /*topLeftInsideDoor+(doorWidth/4)*/,
+                    top: appPic.top -200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW-100,
+                    height: charmAppHW-100,
+                    originX: 'left',
+                    originY: 'top',
+                    visible: true
+                });
+                canvas.add(img).setActiveObject(img);
+                addPic = canvas.getActiveObject();
+
+                addPic.on('selected',function(){
+
+                    canvas.deactivateAll();
+
+                })
+
+                addPic.lockMovementX = true;
+                addPic.lockMovementY = false;}
+    );
+
+}
 
 function createWeather(icon) {
   iconPath = icon.fp;
