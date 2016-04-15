@@ -187,6 +187,7 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
 );
 
 var appIcon;
+var appPic=0;
 function createAppIcon(icon){
     iconPath = icon.fp;
     canvas.remove(appPic);
@@ -222,6 +223,7 @@ function createAppIcon(icon){
                     icon.create = true;
                 }
                 canvas.add(img).setActiveObject(img);
+
                 appPic = canvas.getActiveObject();
                 appPic.on('moving', function(){
                     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
@@ -252,6 +254,7 @@ function createAppIcon(icon){
                         console.log("here");
                         updateApps(true);
                     }
+
                     canvas.deactivateAll();
 
                 })
@@ -385,7 +388,8 @@ function createApps(){
 }
 
 createApps();
-createWeatherApp();
+
+
 function createWeatherApp(){
     iconPath = apps[0][1].fp;
     //canvas.remove(weatPic);
@@ -396,7 +400,7 @@ function createWeatherApp(){
                     left: appPic.left *3 /*topLeftInsideDoor+(doorWidth/4)*/,
                     top: appPic.top -200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
                     width: charmAppHW*3,
-                    height: charmAppHW,
+                    height: charmAppHW+50,
                     originX: 'left',
                     originY: 'top',
                     visible: true
@@ -414,7 +418,7 @@ function createWeatherApp(){
     optionsIcon= new fabric.Image.fromURL(iconPath +'.png', function(img) {
                 img.set({
                     left: appPic.left *7 /*topLeftInsideDoor+(doorWidth/4)*/,
-                    top: appPic.top -200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    top: appPic.top -190/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
                     width: charmAppHW-100,
                     height: charmAppHW-100,
                     originX: 'left',
@@ -434,15 +438,15 @@ function createWeatherApp(){
                 optionsPic.lockMovementY = false;}
     );
 
-    iconPath = apps[0][3].fp;
+    iconPath = apps[0][4].fp;
     console.log(iconPath);
 
     addIcon= new fabric.Image.fromURL(iconPath +'.png', function(img) {
                 img.set({
                     left: appPic.left *7 /*topLeftInsideDoor+(doorWidth/4)*/,
-                    top: appPic.top -200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
-                    width: charmAppHW-100,
-                    height: charmAppHW-100,
+                    top: appPic.top+80/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
+                    width: charmAppHW -50,
+                    height: charmAppHW -50,
                     originX: 'left',
                     originY: 'top',
                     visible: true
@@ -460,7 +464,19 @@ function createWeatherApp(){
                 addPic.lockMovementY = false;}
     );
 
+    weatHeader = new fabric.Text("Weather", {left:0,top:0,fontFamily: 'Arial',fill:'black', fontSize: 40, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:true});
+    var left = appPic.left;
+    console.log(left);
+    weatHeader.left= appPic.left;
+    weatHeader.top = appPic.top;
+    //weatHeader.top= appPic.getTop();
+    weatHeader.selectable = false;
+    weatHeader.evented = false;
+    weatHeader.lockMovementX = weatHeader.lockMovementY = true;
+    canvas.add(weatHeader);
 }
+
 
 function createWeather(icon) {
   iconPath = icon.fp;
@@ -476,13 +492,14 @@ function createWeather(icon) {
                 visible: false
               });
               //icon.create = true;
-
+              createWeatherApp();
             canvas.add(img).setActiveObject(img);
             weatPic = canvas.getActiveObject();
 
             weatPic.lockMovementX = true;
             weatPic.lockMovementY = true;}
   );
+
 
 }
 
