@@ -8,7 +8,6 @@
   
   <!-- Get version 1.5.0 of Fabric.js from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js" ></script>
-
 </head>
 
 <body>
@@ -68,6 +67,7 @@
   apps[0].push({icon:"options",fp:'resources/options',active:false,create:false});
   apps[0].push({icon:"weathAdd",fp:'resources/weathAdd',active:false,create:false});
   apps[0].push({icon:"add",fp:'resources/add',active:false,create:false});
+  apps[0].push({icon:"back",fp:'resources/back',active:false,create:false,index:0});
 
 
   apps[3].push({icon:"mirror",fp:'resources/mirror',active:false,create:false});
@@ -77,6 +77,7 @@
 //---------------End of Ryan's Variable declartions
 
  var canvas = this.__canvas = new fabric.Canvas('c');
+ canvas.renderOnAddRemove = false;
 
   // set background to blue to make it easier to see it
   canvas.backgroundColor = "#DDDDDD";  // light grey
@@ -148,12 +149,19 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
   userPic = canvas.getActiveObject();
   userPic.on('moving', function(){
     emergencyPic.top = userPic.getTop() + quarterDoorHeight;
+    canvas.remove(emergencyPic);
+    canvas.add(emergencyPic);
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
+    canvas.remove(appPic);
+    canvas.add(appPic);
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
-      updateAppPos();
+    canvas.remove(settingsPic);
+    canvas.add(settingsPic);
+
+      //updateAppPos();
 
       canvas.deactivateAll();
-    canvas.renderAll();
+    //canvas.renderAll();
     //fabric.util.requestAnimFrame(animate);
   });
   userPic.lockMovementX = true;
@@ -174,13 +182,19 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
   canvas.add(img).setActiveObject(img);
   emergencyPic = canvas.getActiveObject();
   emergencyPic.on('moving', function(){
-    userPic.top = emergencyPic.getTop() - quarterDoorHeight;
-    appPic.top = emergencyPic.getTop() + quarterDoorHeight;
-    settingsPic.top = appPic.getTop() + quarterDoorHeight;
+  userPic.top = emergencyPic.getTop() - quarterDoorHeight;
+  canvas.remove(userPic);
+  canvas.add(userPic);
+  appPic.top = emergencyPic.getTop() + quarterDoorHeight;
+  canvas.remove(appPic);
+  canvas.add(appPic);
+  settingsPic.top = appPic.getTop() + quarterDoorHeight;
+  canvas.remove(settingsPic);
+  canvas.add(settingsPic)
 
       updateAppPos();
-    canvas.renderAll();
-    fabric.util.requestAnimFrame(animate);
+    //canvas.renderAll();
+    //fabric.util.requestAnimFrame(animate);
   });
   emergencyPic.lockMovementX = true; 
   emergencyPic.lockMovementY = false;}
@@ -226,14 +240,22 @@ function createAppIcon(icon){
 
                 appPic = canvas.getActiveObject();
                 appPic.on('moving', function(){
+
                     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
+                    canvas.remove(userPic);
+                    canvas.add(userPic);
                     settingsPic.top = appPic.getTop() + quarterDoorHeight;
+                    canvas.remove(settingsPic);
+                    canvas.add(settingsPic);
                     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
+                    canvas.remove(emergencyPic);
+                    canvas.add(emergencyPic);
 
                     updateAppPos();
-                    updateCamPos();
+                    //updateCamPos();
+
                     canvas.deactivateAll();
-                    canvas.renderAll();
+                   // canvas.renderAll();
                     //fabric.util.requestAnimFrame(animate);
                 });
 
@@ -321,10 +343,16 @@ var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(i
   settingsPic = canvas.getActiveObject();
   settingsPic.on('moving', function(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
+    canvas.remove(userPic);
+    canvas.add(userPic);
     appPic.top = settingsPic.getTop() - quarterDoorHeight;
+    canvas.remove(appPic);
+    canvas.add(appPic)
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
+    canvas.remove(emergencyPic);
+    canvas.add(emergencyPic);
       updateAppPos();
-    canvas.deactivateAll();
+    //canvas.deactivateAll();
     canvas.renderAll();
     //fabric.util.requestAnimFrame(animate);
   });
@@ -388,6 +416,7 @@ function createApps(){
 }
 
 createApps();
+createWeatherApp();
 
 
 function createWeatherApp(){
@@ -396,19 +425,14 @@ function createWeatherApp(){
     console.log(iconPath);
 
      weatherAppMain= new fabric.Image.fromURL(iconPath +'.png', function(img) {
-                img.set({
-                    left: appPic.left *3 /*topLeftInsideDoor+(doorWidth/4)*/,
-                    top: appPic.top -200/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
-                    width: charmAppHW*3,
-                    height: charmAppHW+50,
-                    originX: 'left',
-                    originY: 'top',
-                    visible: true
-                });
+                img.set({left: appPic.left *3, top: appPic.top -200, width: charmAppHW*3, height: charmAppHW+50, originX: 'left',
+                    originY: 'top', visible: false});
                 canvas.add(img).setActiveObject(img);
+                createWeatherText();
                 weatAppPic = canvas.getActiveObject();
                  weatAppPic.lockMovementX = true;
-                 weatAppPic.lockMovementY = false;}
+                 weatAppPic.lockMovementY = true;}
+
     );
 
 
@@ -416,15 +440,8 @@ function createWeatherApp(){
     console.log(iconPath);
 
     optionsIcon= new fabric.Image.fromURL(iconPath +'.png', function(img) {
-                img.set({
-                    left: appPic.left *7 /*topLeftInsideDoor+(doorWidth/4)*/,
-                    top: appPic.top -190/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
-                    width: charmAppHW-100,
-                    height: charmAppHW-100,
-                    originX: 'left',
-                    originY: 'top',
-                    visible: true
-                });
+                img.set({left: appPic.left *7, top: appPic.top -190, width: charmAppHW-100, height: charmAppHW-100, originX: 'left',
+                    originY: 'top', visible: false});
                 canvas.add(img).setActiveObject(img);
                 optionsPic = canvas.getActiveObject();
 
@@ -435,48 +452,113 @@ function createWeatherApp(){
                 })
 
                 optionsPic.lockMovementX = true;
-                optionsPic.lockMovementY = false;}
+                optionsPic.lockMovementY = true;}
     );
 
     iconPath = apps[0][4].fp;
     console.log(iconPath);
 
     addIcon= new fabric.Image.fromURL(iconPath +'.png', function(img) {
-                img.set({
-                    left: appPic.left *7 /*topLeftInsideDoor+(doorWidth/4)*/,
-                    top: appPic.top+80/*(quarterDoorHeight * 1.5) + charmOffsetY*/,
-                    width: charmAppHW -50,
-                    height: charmAppHW -50,
-                    originX: 'left',
-                    originY: 'top',
-                    visible: true
-                });
+                img.set({left: appPic.left *7, top: appPic.top+80, width: charmAppHW -50, height: charmAppHW -50, originX: 'left',
+                    originY: 'top', visible: false});
                 canvas.add(img).setActiveObject(img);
                 addPic = canvas.getActiveObject();
-
                 addPic.on('selected',function(){
+                    updateWeatApp(true,2);
+                    canvas.deactivateAll();
+                })
+
+                addPic.lockMovementX = true;
+                addPic.lockMovementY = true;}
+    );
+
+    iconPath = apps[0][5].fp;
+    console.log(iconPath);
+
+    weatBack= new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({left: appPic.left*5.5, top: appPic.top+80, width: charmAppHW -50, height: charmAppHW -50, originX: 'left',
+                    originY: 'top', visible: false});
+                canvas.add(img).setActiveObject(img);
+                backPic0 = canvas.getActiveObject();
+                backPic0.on('selected',function(){
+                    if(backPic0.index==2)
+                      updateWeatApp(true,1);
+                    else if(backPic0.index==1)
+                      updateWeatApp(false,3);
 
                     canvas.deactivateAll();
 
                 })
-
-                addPic.lockMovementX = true;
-                addPic.lockMovementY = false;}
+                backPic0.index = 0;
+                backPic0.lockMovementX = true;
+                backPic0.lockMovementY = true;}
     );
 
-    weatHeader = new fabric.Text("Weather", {left:0,top:0,fontFamily: 'Arial',fill:'black', fontSize: 40, fontWeight: 'italic', originX: 'left',
-        originY: 'top',visible:true});
-    var left = appPic.left;
-    console.log(left);
-    weatHeader.left= appPic.left;
-    weatHeader.top = appPic.top;
-    //weatHeader.top= appPic.getTop();
-    weatHeader.selectable = false;
-    weatHeader.evented = false;
-    weatHeader.lockMovementX = weatHeader.lockMovementY = true;
-    canvas.add(weatHeader);
+
+
+
+    clouds= new fabric.Image.fromURL('resources/clouds.png', function(img) {
+                img.set({left: appPic.left *6.5, top: appPic.top-100, width: charmAppHW-100, height: charmAppHW-100, originX: 'left',
+                    originY: 'top', visible: false, lockMovementX: true, lockMovementY:true});
+                canvas.add(img).setActiveObject(img);
+                cloudsPic = canvas.getActiveObject();}
+    );
+
 }
 
+function createWeatherText(){
+    weatHeader = new fabric.Text("Weather", {left:appPic.left+250,top:appPic.top-200,fontFamily: 'Arial',fill:'white', fontSize: 60, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+    weatHeader2 = new fabric.Text("City List:", {left:appPic.left+250,top:appPic.top-130,fontFamily: 'Arial',fill:'white', fontSize: 40, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+    city = new fabric.Text("Chicago", {left:appPic.left+280,top:appPic.top-80,fontFamily: 'Arial',fill:'black', fontSize: 35, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+
+    countryOrign = new fabric.Text("Illinois,United States", {left:appPic.left+280,top:appPic.top-40,fontFamily: 'Arial',fill:'black', fontSize: 35, fontWeight: 'italic', originX: 'left',
+        originY:'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+    time = new fabric.Text("12:58am", {left:appPic.left+280,top:appPic.top,fontFamily: 'Arial',fill:'black', fontSize: 35, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+    temp = new fabric.Text("78", {left:appPic.left*6.8,top:appPic.top,fontFamily: 'Arial',fill:'black', fontSize: 35, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+    degree = new fabric.Text("o", {left:appPic.left*7.2,top:appPic.top-5,fontFamily: 'Arial',fill:'black', fontSize: 24, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+    tempScale = new fabric.Text("F", {left:appPic.left*7.3,top:appPic.top,fontFamily: 'Arial',fill:'black', fontSize: 35, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+    searchText = new fabric.IText("Search City", {left:appPic.left*3.5,top:appPic.top-50, width:5,fontFamily: 'Arial',fill:'black', fontSize: 35, fontWeight: 'italic', originX: 'left',
+        originY: 'top',visible:false,lineHeight:1,lockMovementX:true,lockMovementY:true,hasControls:false});
+    textBox = new fabric.Rect({left:appPic.left*3.5,top:appPic.top-60,height:charmAppHW-150,width:charmAppHW*2.5,fill:'white',visible:false,hasControls:false,lockMovementX:true,
+        lockMovementY:true});
+
+    searchText.entered = false;
+    searchText.on('editing:entered',function(){
+        if(searchText.entered==false) {
+            searchText.text = "       "
+            searchText.entered=true;
+        }
+    })
+
+
+    canvas.add(textBox);
+    canvas.add(weatHeader);
+    canvas.add(weatHeader2);
+    canvas.add(city);
+    canvas.add(countryOrign);
+    canvas.add(time);
+    canvas.add(temp);
+    canvas.add(degree);
+    canvas.add(tempScale);
+    canvas.add(searchText);
+
+
+}
 
 function createWeather(icon) {
   iconPath = icon.fp;
@@ -491,10 +573,20 @@ function createWeather(icon) {
                 originY: 'top',
                 visible: false
               });
-              //icon.create = true;
-              createWeatherApp();
+
             canvas.add(img).setActiveObject(img);
             weatPic = canvas.getActiveObject();
+
+
+           weatPic.on('selected',function(){
+               console.log("test");
+              updateApps(false);
+              updateWeatApp(true,1);
+              apps[0][0].active = true;
+              appIdx = 0;
+              canvas.deactivateAll();
+
+          })
 
             weatPic.lockMovementX = true;
             weatPic.lockMovementY = true;}
@@ -822,11 +914,23 @@ function createHome(icon) {
 
 function updateAppPos(){
     weatPic.top = appPic.top - 200;
+    canvas.remove(weatPic);
+    canvas.add(weatPic);
     clockPic.top = appPic.top - 200;
+    canvas.remove(clockPic);
+    canvas.add(clockPic);
     calenderPic.top = appPic.top - 200;
+    canvas.remove(calenderPic);
+    canvas.add(calenderPic);
     doorCamPic.top = appPic.top;
+    canvas.remove(doorCamPic);
+    canvas.add(doorCamPic);
     notesPic.top = appPic.top;
+    canvas.remove(notesPic);
+    canvas.add(notesPic);
     homePic.top = appPic.top;
+    canvas.remove(homePic);
+    canvas.add(homePic);
 
 
 }
@@ -890,6 +994,95 @@ function updateCamApp(isVisible,menuId){
     }
 }
 
+
+function updateWeatApp(isVisible,menuId){
+
+
+    if(menuId==1){
+        if(isVisible==true) {
+            apps[0][1].active=true;
+            weatAppPic.visible = true;
+            optionsPic.visible = true;
+            addPic.visible = true;
+            backPic0.visible = true;
+            backPic0.left = appPic.left * 5.5;
+            canvas.remove(backPic0);
+            canvas.add(backPic0);
+
+            weatHeader.visible = true;
+            weatHeader2.visible=true;
+            weatHeader2.text = "City List:";
+
+            city.visible=true;
+            countryOrign.visible=true;
+            time.visible=true;
+            temp.visible=true;
+            degree.visible=true;
+            tempScale.visible=true;
+            cloudsPic.visible=true;
+
+            searchText.visible=false;
+            textBox.visible=false;
+            searchText.entered=false;
+            searchText.text="Search Cities";
+            backPic0.index = 1;
+        }
+    }
+    else if(menuId==2){
+        if(isVisible==true) {
+         weatHeader2.text = "Add a city:";
+         optionsPic.visible = false;
+         addPic.visible=false;
+         backPic0.left = appPic.left*7;
+         canvas.remove(backPic0);
+         canvas.add(backPic0);
+         textBox.visible=true;
+
+
+
+
+         city.visible = false;
+         countryOrign.visible=false;
+         time.visible = false;
+         temp.visible =false;
+         degree.visible=false;
+         tempScale.visible=false;
+         searchText.visible=true;
+
+         cloudsPic.visible=false;
+         backPic0.index = 2;
+        }
+
+
+    }
+    else if(menuId==3){
+        updateApps(true);
+        if(isVisible==false) {
+            backPic0.index = 0;
+            apps[0][1].active=false;
+            weatAppPic.visible = false;
+            optionsPic.visible = false;
+            addPic.visible = false;
+            backPic0.visible=false;
+
+            weatHeader.visible = false;
+            weatHeader2.visible=false;
+            weatHeader2.text = "City List:";
+
+            city.visible=false;
+            countryOrign.visible=false;
+            time.visible=false;
+            temp.visible=false;
+            degree.visible=false;
+            tempScale.visible=false;
+            searchText.visible=false;
+
+            cloudsPic.visible=false;
+        }
+
+    }
+}
+
 /*function updateCamPos(){
     backPic.top = appPic.top *1.02;
     peepPic.top = appPic.top;
@@ -929,6 +1122,8 @@ function updateApps(isVisible){
 function closeApp(name){
     if(name=="doorCam")
         updateCamApp(false,3);
+    else if(name=="weather")
+        updateWeatApp(false,3)
 
 }
 
