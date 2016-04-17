@@ -4,14 +4,15 @@
 <!DOCTYPE html>    
 <head>
     <meta charset="utf-8">
-    <title>fabric.js project template</title>
+    <title>Project 2 - Group 25</title>
   
   <!-- Get version 1.5.0 of Fabric.js from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js" ></script>
 
+
 </head>
 
-<body>
+<body onload="setClock(); setTemp(); setDate();">
     <!-- canvas tag for Fabric.js to draw into -->
     <!-- set this to some appropriate size for your development work -->
     <!-- but keep the same aspect ratio -->
@@ -45,15 +46,95 @@
   var doorKnobRadius = 75;
   var insideKnobStartX = topLeftInsideDoor + doorWidth - doorKnobRadius - charmOffsetX;
   var outsideKnobStartX = topLeftOutisdeDoor + doorKnobRadius + charmOffsetX;
-  var userPic, emergencyPic, appPic, settingsPic;
-  
+  var userPic, emergencyPic, appPic, settingsPic,weatherPic;
 
   var canvas = this.__canvas = new fabric.Canvas('c');
+  var military = false;
+  var celsius = true;
 
   // set background to blue to make it easier to see it
   canvas.backgroundColor = "#DDDDDD";  // light grey
 
 // need 36 wide instead of 40 as now
+
+
+//--------Date-and-Time ---------------------------
+
+function setClock()
+{
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  amPm.setText("");
+  if(!military){
+    h >= 12 ? amPm.setText("PM") : amPm.setText("AM");
+    h = h > 12 ? h - 12 : h;
+  }
+  m = m < 10 ? "0" + m : m;
+  clock.setText(h + ":" + m);
+  canvas.renderAll();
+  setTimeout(setClock,1000);
+}
+
+function setDate()
+{
+  var today = new Date();
+  var d = today.getDate();
+  var m = today.getMonth() + 1;
+  var y = today.getFullYear();
+
+  date.setText(m + "/" + d + "/" + y);
+  canvas.renderAll();
+}
+
+var clock = new fabric.Text("",{  
+  left: topLeftInsideDoor + (doorWidth * (13/27)),
+  top: localHeight/16,
+  originX: 'center',
+  originY: 'center',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 175,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+var date = new fabric.Text("",{
+  left: topLeftInsideDoor + (doorWidth * (13/27)),
+  top: localHeight/8,
+  originX: 'center',
+  originY: 'center',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 75,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+var amPm = new fabric.Text("",{
+  left: clock.getLeft() + 315,
+  top: clock.getTop() + 70,
+  originX: 'right',
+  originY: 'bottom',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 70,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+//----END-DATE-AND-TIME----------------------------
+
+
+
+
+//---DOOR-ELEMENTS---------------------------------
 
 var insideDoor = new fabric.Rect({
   left: topLeftInsideDoor,
@@ -87,14 +168,59 @@ outsideDoor.lockMovementX = outsideDoor.lockMovementY = true;
 // create a circle for the shower head location
 var insideHandle = new fabric.Circle({
   radius: doorKnobRadius, fill: 'grey', left: insideKnobStartX , top: doorKnobStartY,   originX: 'center',
-  originY: 'center'
+  originY: 'center',
+  lockMovementX: true,
+  lockMovementY: true 
 });
 
 // create a circle for the shower head location
 var outsideHandle = new fabric.Circle({
   radius: doorKnobRadius, fill: 'grey', left: outsideKnobStartX, top: doorKnobStartY,   originX: 'center',
-  originY: 'center'
+  originY: 'center',
+  lockMovementX: true,
+  lockMovementY: true
 });
+
+//--END-DOOR-ELEMENTS---------------------------------
+
+
+//-----WEATHER----------------------------------------
+var weatherIcon = new fabric.Image.fromURL('resources/clouds.png', function(img) {
+  img.set({
+    left: insideHandle.getLeft(),
+    top: 0,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'center',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  weatherPic = canvas.getActiveObject();
+  weatherPic.lockMovementX = true;
+  weatherPic.lockMovementY = true;}
+);
+
+var degrees = new fabric.Text("72°",{
+  left: insideHandle.getLeft(),
+  top: localHeight/8,
+  originX: 'center',
+  originY: 'center',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 70,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+function setTemp()
+{
+  celsius ? degrees.setText(degrees.getText() + "C") : degrees.setText(degrees.getText() + "F");
+  canvas.renderAll(); 
+}
+//-----END-WEATHER------------------------------------
 
 
 /*-----------------------------------------------------------------
@@ -105,8 +231,7 @@ var outsideHandle = new fabric.Circle({
 *  -userIcon
 *///---------------------------------------------------------------
 
-
-var userIcon = new fabric.Image.fromURL('single.png', function(img) {
+var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
     top: charmOffsetY,
@@ -118,20 +243,20 @@ var userIcon = new fabric.Image.fromURL('single.png', function(img) {
   });
   canvas.add(img).setActiveObject(img);
   userPic = canvas.getActiveObject();
-  userPic.on('moving', function(){
+  userPic.on('moving', function animate(){
     emergencyPic.top = userPic.getTop() + quarterDoorHeight;
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
-
-    canvas.renderAll();
-    fabric.util.requestAnimFrame(animate);
+    userIcon.top = userPic.top;
+    userIcon.left = userPic.left;
+    canvas.deactivateAll().renderAll();
   });
   userPic.lockMovementX = true;
   userPic.lockMovementY = false;}
 );
 
 
-var emergencyIcon =  new fabric.Image.fromURL('shield.png', function(img) {
+var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
     top: quarterDoorHeight + charmOffsetY,
@@ -143,20 +268,19 @@ var emergencyIcon =  new fabric.Image.fromURL('shield.png', function(img) {
   });
   canvas.add(img).setActiveObject(img);
   emergencyPic = canvas.getActiveObject();
-  emergencyPic.on('moving', function(){
+  emergencyPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
 
-    canvas.renderAll();
-    fabric.util.requestAnimFrame(animate);
+    canvas.deactivateAll().renderAll();
   });
   emergencyPic.lockMovementX = true; 
   emergencyPic.lockMovementY = false;}
 );
 
 
-var appIcon = new fabric.Image.fromURL('app.png', function(img) {
+var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
     top: (quarterDoorHeight * 2) + charmOffsetY,
@@ -168,20 +292,19 @@ var appIcon = new fabric.Image.fromURL('app.png', function(img) {
   });
   canvas.add(img).setActiveObject(img);
   appPic = canvas.getActiveObject();
-  appPic.on('moving', function(){
+  appPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
 
-    canvas.renderAll();
-    fabric.util.requestAnimFrame(animate);
+    canvas.deactivateAll().renderAll();
   });
   appPic.lockMovementX = true;
   appPic.lockMovementY = false;}
 );
 
 
-var settingsIcon = new fabric.Image.fromURL('settings.png', function(img) {
+var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
     top: (quarterDoorHeight * 3) + charmOffsetY,
@@ -193,13 +316,12 @@ var settingsIcon = new fabric.Image.fromURL('settings.png', function(img) {
   });
   canvas.add(img).setActiveObject(img);
   settingsPic = canvas.getActiveObject();
-  settingsPic.on('moving', function(){
+  settingsPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
     appPic.top = settingsPic.getTop() - quarterDoorHeight;
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
 
-    canvas.renderAll();
-    fabric.util.requestAnimFrame(animate);
+    canvas.deactivateAll().renderAll();
   });
   settingsPic.lockMovementX = true;
   settingsPic.lockMovementY = false;}
@@ -251,6 +373,10 @@ canvas.add(insideDoor);
 canvas.add(outsideDoor);
 canvas.add(insideHandle);
 canvas.add(outsideHandle);
+canvas.add(clock);
+canvas.add(date);
+canvas.add(amPm);
+canvas.add(degrees);
 
 
 // code adapted from http://jsfiddle.net/tornado1979/39up3jcm/
