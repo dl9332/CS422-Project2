@@ -42,11 +42,13 @@
   var quarterDoorHeight = localHeight / 4;
   var charmOffsetY = (localHeight - (localHeight * .75) - charmAppHW) / 2;
   var charmOffsetX = doorWidth / 18;
+  var userOffsetX = charmOffsetX / 2;
+  var userOffsetY = charmOffsetY / 2;
   var doorKnobStartY = .47 * localHeight;
   var doorKnobRadius = 75;
   var insideKnobStartX = topLeftInsideDoor + doorWidth - doorKnobRadius - charmOffsetX;
   var outsideKnobStartX = topLeftOutisdeDoor + doorKnobRadius + charmOffsetX;
-  var userPic, emergencyPic, appPic, settingsPic,weatherPic;
+  var userPic, emergencyPic, appPic, settingsPic, weatherPic, devinPic, tomPic, mikePic, mattPic;
 
   var canvas = this.__canvas = new fabric.Canvas('c');
   var military = false;
@@ -130,8 +132,6 @@ var amPm = new fabric.Text("",{
 });
 
 //----END-DATE-AND-TIME----------------------------
-
-
 
 
 //---DOOR-ELEMENTS---------------------------------
@@ -365,6 +365,106 @@ function moveCharms()
 
 
 //--------------------END-CHARMS-BAR-------------------------------
+
+//----USER-ICONS----------------------------
+
+var devinIcon = new fabric.Image.fromURL('resources/duck.png', function(img) {
+  img.set({
+    left: userPic.left + userPic.width + userOffsetX,
+    top: userPic.top,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  devinPic = canvas.getActiveObject();
+  devinPic.on('moving', function animate(){
+    canvas.deactivateAll().renderAll();
+  });
+  devinPic.lockMovementX = true;
+  devinPic.lockMovementY = false;}
+);
+
+
+var tomIcon = new fabric.Image.fromURL('resources/pig.png', function(img) {
+  img.set({
+    left: userPic.left + (2 * (userPic.width + userOffsetX)),
+    top: userPic.top,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  tomPic = canvas.getActiveObject();
+  tomPic.on('moving', function animate(){
+    canvas.deactivateAll().renderAll();
+  });
+  userPic.lockMovementX = true;
+  userPic.lockMovementY = false;}
+);
+
+var mattIcon = new fabric.Image.fromURL('resources/lamb.png', function(img) {
+  img.set({
+    left: userPic.left + (3 * (userPic.width + userOffsetX)),
+    top: userPic.top,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  mattPic = canvas.getActiveObject();
+  mattPic.on('moving', function animate(){
+    canvas.deactivateAll().renderAll();
+  });
+  mattPic.lockMovementX = true;
+  mattPic.lockMovementY = false;}
+);
+
+var mikeIcon = new fabric.Image.fromURL('resources/dog.png', function(img) {
+  img.set({
+    left: userPic.left + userPic.width + userOffsetX,
+    top: userPic.top + userPic.height + userOffsetY,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  mikePic = canvas.getActiveObject();
+  mikePic.on('moving', function animate(){
+    canvas.deactivateAll().renderAll();
+  });
+  mikePic.lockMovementX = true;
+  mikePic.lockMovementY = false;}
+);
+
+var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
+  img.set({
+    left: userPic.left + (2 * (userPic.width + userOffsetX)),
+    top: userPic.top + userPic.height + userOffsetY,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: true
+  });
+  canvas.add(img).setActiveObject(img);
+  ryanPic = canvas.getActiveObject();
+  ryanPic.on('moving', function animate(){
+    canvas.deactivateAll().renderAll();
+  });
+  ryanPic.lockMovementX = true;
+  ryanPic.lockMovementY = false;}
+);
+
+//----END-USER-ICONS------------------------
 
 
 // add all of the elements to the canvas
