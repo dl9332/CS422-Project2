@@ -505,6 +505,7 @@ function createWeatherApp(){
     );
 
 }
+var textBuff = ({text:null,active:false,count:0});
 
 function createWeatherText(){
     weatHeader = new fabric.Text("Weather", {left:appPic.left+250,top:appPic.top-200,fontFamily: 'Arial',fill:'white', fontSize: 60, fontWeight: 'italic', originX: 'left',
@@ -544,6 +545,22 @@ function createWeatherText(){
             searchText.entered=true;
         }
     })
+
+    searchText.on('selection:changed',function(){
+       if(searchText.text.length==28&&textBuff.active==false){
+          textBuff.text = searchText.text;
+          searchText.textAlign = 'right';
+          searchText.text[28]=" ";
+
+          textBuff.count = 28;
+          textBuff.active = true;
+       }
+        else if(searchText.text.length>=28){
+            console.log("test");
+            searchText.text.slice(27,2);
+        }
+    })
+
 
 
     canvas.add(textBox);
