@@ -247,9 +247,15 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     emergencyPic.top = userPic.getTop() + quarterDoorHeight;
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
+    canvas.deactivateAll().renderAll();
+  });
+  userPic.on('selected', function (){
+    showUsers(true);
+  });
+  userPic.on('modified', function (){
     userIcon.top = userPic.top;
     userIcon.left = userPic.left;
-    canvas.deactivateAll().renderAll();
+    showUsers(false);
   });
   userPic.lockMovementX = true;
   userPic.lockMovementY = false;}
@@ -463,6 +469,15 @@ var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
   ryanPic.lockMovementX = true;
   ryanPic.lockMovementY = false;}
 );
+
+function showUsers(visible)
+{
+  ryanPic.visible = visible;
+  mikePic.visible = visible;
+  devinPic.visible = visible;
+  mattPic.visible = visible;
+  tomPic.visible = visible;
+}
 
 //----END-USER-ICONS------------------------
 
