@@ -56,7 +56,7 @@
   var celsius = false
 ;
 
-  var userSelect = false;
+  var userSelect = true;
 
   // set background to blue to make it easier to see it
   canvas.backgroundColor = "#DDDDDD";  // light grey
@@ -461,7 +461,7 @@ var devinIcon = new fabric.Image.fromURL('resources/duck.png', function(img) {
     height: charmAppHW,
     originX: 'left',
     originY: 'top',
-    visible: true
+    visible: false
   });
   img.on('added', function ()
   {
@@ -490,7 +490,7 @@ var tomIcon = new fabric.Image.fromURL('resources/pig.png', function(img) {
     height: charmAppHW,
     originX: 'left',
     originY: 'top',
-    visible: true
+    visible: false
   });
   img.on('added', function ()
   {
@@ -515,7 +515,7 @@ var mattIcon = new fabric.Image.fromURL('resources/lamb.png', function(img) {
     height: charmAppHW,
     originX: 'left',
     originY: 'top',
-    visible: true
+    visible: false
   });
   img.on('added', function ()
   {
@@ -540,7 +540,7 @@ var mikeIcon = new fabric.Image.fromURL('resources/dog.png', function(img) {
     height: charmAppHW,
     originX: 'left',
     originY: 'top',
-    visible: true
+    visible: false
   });
   img.on('added', function ()
   {
@@ -565,7 +565,7 @@ var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
     height: charmAppHW,
     originX: 'left',
     originY: 'top',
-    visible: true
+    visible: false
   });
   img.on('added', function ()
   {
@@ -582,7 +582,28 @@ var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
   ryanPic.lockMovementY = false;}
 );
 
-var addUserIcon;
+var addUserIcon = new fabric.Image.fromURL('resources/addUser.png', function(img) {
+  img.set({
+    left: userPic.left + (3 * (userPic.width + userOffsetX)),
+    top: userPic.top + userPic.height + userOffsetY,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: false
+  });
+  img.on('added', function ()
+  {
+    canvas.renderAll();
+  });
+  canvas.add(img).setActiveObject(img);
+  addUserPic = canvas.getActiveObject();
+  addUserPic.on('moving', function animate(){
+    canvas.deactivateAll().renderAll();
+  });
+  addUserPic.lockMovementX = true;
+  addUserPic.lockMovementY = false;}
+);
 
 var tomText = new fabric.Text("Tom",{  
   left: tomIcon.left,
@@ -591,7 +612,7 @@ var tomText = new fabric.Text("Tom",{
   originY: 'top',
   fontWeight: 'bold',
   shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
-  visible: true,
+  visible: false,
   fontFamily: 'droid serif',
   fontSize: 50,
   lockMovementX: true,
@@ -605,7 +626,7 @@ var mikeText = new fabric.Text("Mike",{
   originY: 'top',
   fontWeight: 'bold',
   shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
-  visible: true,
+  visible: false,
   fontFamily: 'droid serif',
   fontSize: 50,
   lockMovementX: true,
@@ -619,7 +640,7 @@ var ryanText = new fabric.Text("Ryan",{
   originY: 'top',
   fontWeight: 'bold',
   shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
-  visible: true,
+  visible: false,
   fontFamily: 'droid serif',
   fontSize: 50,
   lockMovementX: true,
@@ -633,7 +654,7 @@ var mattText = new fabric.Text("Matt",{
   originY: 'top',
   fontWeight: 'bold',
   shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
-  visible: true,
+  visible: false,
   fontFamily: 'droid serif',
   fontSize: 50,
   lockMovementX: true,
@@ -647,7 +668,7 @@ var devinText  = new fabric.Text("Devin",{
   originY: 'top',
   fontWeight: 'bold',
   shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
-  visible: true,
+  visible: false,
   fontFamily: 'droid serif',
   fontSize: 50,
   lockMovementX: true,
@@ -666,6 +687,7 @@ function showUsers(visible)
   devinText.visible = visible;
   mattText.visible = visible;
   tomText.visible = visible;
+  addUserPic.visible = visible; 
 }
 
 function moveUsers()
@@ -675,6 +697,7 @@ function moveUsers()
   tomPic.top = userPic.top;
   ryanPic.top = userPic.top + userPic.height + userOffsetY;
   mikePic.top = userPic.top + userPic.height + userOffsetY;
+  addUserPic.top =  userPic.top + userPic.height + userOffsetY;
   devinText.top = devinPic.top + userPic.height;
   devinText.left = devinPic.left;
   mattText.top = mattPic.top + userPic.height;
