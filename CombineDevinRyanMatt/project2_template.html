@@ -63,6 +63,7 @@
   var apiCode ='&APPID=aa4e2383e2f4acc395aeb12aa81c13ad';
   var groupMsg = [];
   var apps = [];
+  var weather = [];
   var appIdx =0;
   var messageBody=({active:false,icon:null,msg:'',header:''});
   var videoBody = ({active:false,icon1:null,icon2:null,icon3:null,icon4:null,icon5:null,icon6:null,
@@ -107,6 +108,13 @@ apps[4].push({icon:"noteRec",fp:'resources/noteRec',active:false,create:false});
 apps[4].push({icon:"rec",fp:'resources/rec',active:false,create:false});
 apps[4].push({icon:"rec2",fp:'resources/rec2',active:false,create:false});
 apps[4].push({icon:"defaultNote",fp:'resources/defaultRec',active:false,create:false});
+
+weather.push({icon:null,pic:null,fp:'resources/thunderStorm',code:200});
+weather.push({icon:null,pic:null,fp:'resources/rain',code:500});
+weather.push({icon:null,pic:null,fp:'resources/clear',code:800});
+weather.push({icon:null,pic:null,fp:'resources/cloudy',code:801});
+
+
 //---------------End of Ryan's Variable declartions
   var userSelect = false;
 
@@ -693,8 +701,8 @@ function createWeatherApp(){
             backPic0.lockMovementX = true;
             backPic0.lockMovementY = true;}
   );
-
-
+  jsonCity=city.trim();
+  json_obj = JSON.parse(get(URL+jsonCity+apiCode));
   clouds= new fabric.Image.fromURL('resources/clouds.png', function(img) {
             img.set({left: appPic.left *6.5, top: appPic.top-100, width: charmAppHW-100, height: charmAppHW-100, originX: 'left',
               originY: 'top', visible: false, lockMovementX: true, lockMovementY:true});
