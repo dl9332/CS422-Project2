@@ -51,7 +51,7 @@
   var outsideKnobStartX = topLeftOutisdeDoor + doorKnobRadius + charmOffsetX;
   var userPic, emergencyPic, appPic, settingsPic;
   var URL = 'http://api.openweathermap.org/data/2.5/forecast/city?q=';
-  var city = 'London,uk';
+  var jsonCity = 'London,uk';
   var apiCode ='&APPID=aa4e2383e2f4acc395aeb12aa81c13ad';
 
 
@@ -69,7 +69,7 @@
   apps[1].push({icon:"clock",fp:'resources/clock',active:false,create:false});
   apps[2].push({icon:"calender",fp:'resources/calender',active:false,create:false});
   apps[3].push({icon:"doorCam",fp:'resources/doorCam',active:false,create:false});
-  apps[4].push({icon:"notes",fp:'resources/notes',active:false,create:false,appIdx:0});
+  apps[4].push({icon:"notes",fp:'resources/notes',active:false,create:false,appIdx:0,last:0});
   apps[5].push({icon:"home",fp:'resources/home',active:false,create:false});
 
   apps[0].push({icon:"weatMenu",fp:'resources/weatMenu',active:false,create:false});
@@ -77,6 +77,7 @@
   apps[0].push({icon:"weathAdd",fp:'resources/weathAdd',active:false,create:false});
   apps[0].push({icon:"add",fp:'resources/add',active:false,create:false});
   apps[0].push({icon:"back",fp:'resources/back',active:false,create:false,index:0});
+
 
 
   apps[3].push({icon:"mirror",fp:'resources/mirror',active:false,create:false});
@@ -96,6 +97,10 @@
   apps[4].push({icon:"left",fp:'resources/left',active:false,create:false});
   apps[4].push({icon:"right",fp:'resources/right',active:false,create:false});
   apps[4].push({icon:"circle",fp:'resources/circle',active:false,create:false});
+  apps[4].push({icon:"noteRec",fp:'resources/noteRec',active:false,create:false});
+  apps[4].push({icon:"rec",fp:'resources/rec',active:false,create:false});
+  apps[4].push({icon:"rec2",fp:'resources/rec2',active:false,create:false});
+
 
 
 
@@ -485,15 +490,15 @@ function createWeatherApp(){
                 addPic = canvas.getActiveObject();
                 addPic.on('selected',function(){
                     if(apps[0][0].appIdx==1) {
-                        updateWeatApp(true, 2);
+                        updateWeatApp(true,2);
                         apps[0][0].appIdx = 2;
                     }
                     else{
                         apps[0][0].appIdx = 1;
                         var text = searchText.text;
                         text = text.trim();
-                        city = text;
-                        json_obj = get(URL+city+apiCode);
+                        jsonCity = text;
+                        json_obj = JSON.parse(get(URL+jsonCity+apiCode));
                         updateWeatApp(true,1);
                     }
                     //var json_obj = JSON.parse(get(URL+city+apiCode));
@@ -527,8 +532,6 @@ function createWeatherApp(){
                 backPic0.lockMovementX = true;
                 backPic0.lockMovementY = true;}
     );
-
-
 
 
     clouds= new fabric.Image.fromURL('resources/clouds.png', function(img) {
@@ -798,12 +801,20 @@ function createDoorCamApp(){
                         apps[3][0].active = false;
                     }
                     else if(appIdx==4){
-                        if(apps[4][0].appIdx==3){
+                        if(apps[4][0].appIdx==3&& apps[4][0].last==2){
                             updateNoteApp(false, 3);
                             updateNoteApp(true,2);
                             //updateApps(true);
                             apps[4][0].appIdx = 2;
 
+                        }
+                        else if( apps[4][0].appIdx==3&&apps[4][0].last==6){
+                            updateNoteApp(false,3);
+                            updateNoteApp(true,6);
+                        }
+                        else if(apps[4][0].appIdx==6&&apps[4][0].last==1){
+                            updateNoteApp(false,6);
+                            updateNoteApp(true,1);
                         }
                         else {
                             updateNoteApp(false, 0);
@@ -832,9 +843,9 @@ function createNoteApp(){
                 noteCamPic = canvas.getActiveObject();
 
                 noteCamPic.on('selected',function(){
-                    updateNoteApp(true,3);
+                    updateNoteApp(false,0);
+                    updateNoteApp(true,6);
                     canvas.deactivateAll();
-
                 })
             }
     );
@@ -876,7 +887,7 @@ function createNoteApp(){
     iconPath = apps[4][5].fp;
     noteBarIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
 
-                img.set({left: appPic.left *4.2 , top: appPic.top -160, width:charmAppHW, height: charmAppHW-130,
+                img.set({left: appPic.left*4.2 , top: appPic.top-160, width:charmAppHW, height: charmAppHW-130,
                     originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
                 });
 
@@ -927,7 +938,7 @@ function createNoteApp(){
     iconPath = apps[4][7].fp;
     groupIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
 
-                img.set({left: appPic.left *3 , top: appPic.top *1, width: charmAppHW, height: charmAppHW,
+                img.set({left: appPic.left *3 , top: appPic.top *1, width: charmAppHW-20, height: charmAppHW-20,
                     originX: 'left', originY: 'top', visible:false,lockMovementX:true,lockMovementY:true
                 });
 
@@ -935,7 +946,7 @@ function createNoteApp(){
                 groupPic = canvas.getActiveObject();
 
                 groupPic.on('selected',function(){
-                    updateNoteApp(false,1);
+                    updateNoteApp(false,3);
                     canvas.deactivateAll();
 
                 })
@@ -946,7 +957,7 @@ function createNoteApp(){
     iconPath = apps[4][8].fp;
     singleIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
 
-                img.set({left: appPic.left *5 , top: appPic.top *1, width: charmAppHW, height: charmAppHW,
+                img.set({left: appPic.left *5 , top: appPic.top *1, width: charmAppHW-20, height: charmAppHW-20,
                     originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
                 });
 
@@ -1047,11 +1058,81 @@ function createNoteApp(){
             }
     );
 
+    iconPath = apps[3][4].fp;
+    recBar = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({left: appPic.left*4, top: appPic.top+50, width: charmAppHW*2, height: charmAppHW-100, originX: 'left',
+                    originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
+                canvas.add(img).setActiveObject(img);
+                recBarPic = canvas.getActiveObject();
+            }
+    );
 
+    iconPath = apps[4][12].fp;
 
+    recNoteIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({left: appPic.left*4, top: appPic.top-400, width: charmAppHW*2, height: charmAppHW*2, originX: 'left',
+                    originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
+                canvas.add(img).setActiveObject(img);
+                recNotePic = canvas.getActiveObject();
+                recNotePic.on('selected',function(){
+                    updateNoteApp(false,6);
+                    updateNoteApp(true,3)
+                    canvas.deactivateAll();
 
+                })
+            }
+    );
 
+    iconPath = apps[4][13].fp;
 
+    recIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({left: appPic.left*5.5, top: appPic.top+10, width: charmAppHW -40, height: charmAppHW -40, originX: 'left',
+                    originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
+                canvas.add(img).setActiveObject(img);
+                recPic = canvas.getActiveObject();
+                recPic.on('selected',function(){
+                    recPic2.visible=true;
+                    recPic.visible=false;
+                    canvas.deactivateAll();
+
+                })
+            }
+    );
+
+    iconPath = apps[4][14].fp;
+    recIcon2 = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({left: appPic.left*5.5, top: appPic.top+10, width: charmAppHW -40, height: charmAppHW -40, originX: 'left',
+                    originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
+                canvas.add(img).setActiveObject(img);
+                recPic2 = canvas.getActiveObject();
+                recPic2.on('selected',function(){
+                    recPic.visible=true;
+                    recPic2.visible=false;
+                    canvas.deactivateAll();
+
+                })
+
+            }
+    );
+
+    iconPath = apps[4][4].fp;
+    postItIcon2 = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+
+                img.set({left: appPic.left *3.5 , top: appPic.top+10, width: charmAppHW, height: charmAppHW,
+                    originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
+                });
+
+                canvas.add(img).setActiveObject(img);
+                postItPic2 = canvas.getActiveObject();
+
+                postItPic2.on('selected',function(){
+                    updateNoteApp(false,6);
+                    updateNoteApp(true,3);
+                    canvas.deactivateAll();
+                })
+
+            }
+    );
 
 
 }
@@ -1286,7 +1367,9 @@ function updateNoteApp(isVisible,menuId){
             notePadPic.visible = true;
             backPic.visible = true;
             camMenuPic.visible = true;
+            temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=1;
+            apps[4][0].last=temp;
         }
         else if(isVisible==false){
             noteCamPic.visible = false;
@@ -1317,12 +1400,15 @@ function updateNoteApp(isVisible,menuId){
             notePadPic.visible = false;
             backPic.visible = false;
             camMenuPic.visible = false;
+            temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=2;
+            apps[4][0].last=temp;
         }
         else if(isVisible==false){
             noteBarPic.visible=false;
             noteBoxPic.visible=false;
             postItPic.visible=false;
+            postItPic2.visible=false;
             backPic1.visible=false;
             noteHeader.visible=false;
             message.visible=false;
@@ -1335,12 +1421,16 @@ function updateNoteApp(isVisible,menuId){
             groupPic.visible=true;
             backPic.visible=true;
             camMenuPic.visible=true;
+            camMenuPic.width= charmAppHW*3.1;
+            temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=3;
+            apps[4][0].last=temp;
         }
         else{
             singlePic.visible=false;
             groupPic.visible=false;
             backPic.visible=false;
+            camMenuPic.width= charmAppHW*3.3;
             camMenuPic.visible=false;
         }
 
@@ -1355,7 +1445,9 @@ function updateNoteApp(isVisible,menuId){
             rightPic.visible=true;
             camMenuPic.visible = true;
             camMenuPic.top = appPic.top+300;
+            temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=4;
+            apps[4][0].last=temp;
         }
         else{
             circle1.visible=false;
@@ -1364,7 +1456,7 @@ function updateNoteApp(isVisible,menuId){
             leftPic.visible=false;
             rightPic.visible=false;
             backPic.visible=false;
-            camMenuPic.top = appPic.top;
+            camMenuPic.top = appPic.top*1.02;
         }
 
 
@@ -1375,13 +1467,37 @@ function updateNoteApp(isVisible,menuId){
             groupPic.visible=true;
             backPic.visible=true;
             camMenuPic.visible=true;
+            temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=3;
+            apps[4][0].last=temp;
         }
         else{
             singlePic.visible=false;
             groupPic.visible=false;
             backPic.visible=false;
             camMenuPic.visible=false;
+        }
+    }
+
+    else if(menuId==6){
+        if(isVisible==true){
+            recBarPic.visible=true;
+            recNotePic.visible=true;
+            recPic.visible=true;
+            backPic.visible=true;
+            backPic.bringToFront();
+            postItPic2.visible=true;
+            temp =  apps[4][0].appIdx;
+            apps[4][0].appIdx=6;
+            apps[4][0].last=temp;
+        }
+        else{
+            recBarPic.visible=false;
+            recNotePic.visible=false;
+            recPic.visible=false;
+            backPic.visible=false;
+            recPic2.visible=false;
+            postItPic2.visible=false;
         }
     }
 
@@ -1403,7 +1519,12 @@ function updateNoteApp(isVisible,menuId){
             circle2.visible=false;
             circle3.visible=false;
             backPic.visible=false;
-            camMenuPic.top = appPic.top;
+            recBarPic.visible=false;
+            recNotePic.visible=false;
+            recPic.visible=false;
+            recPic2.visible=false;
+            camMenuPic.top = appPic.top*1.02;
+            postItPic2.visible=false;
         }
 
     }
