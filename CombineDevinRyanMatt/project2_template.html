@@ -61,10 +61,9 @@
   var URL = 'http://api.openweathermap.org/data/2.5/forecast/city?q=';
   var jsonCity = 'London,uk';
   var apiCode ='&APPID=aa4e2383e2f4acc395aeb12aa81c13ad';
-  var charmBar = [];
+  var groupMessages = [];
   var apps = [];
   var appIdx =0;
-  charmBar.push({icon:"app",fp:'resources/app',active:false,create:false});
   for(i=0;i<6;i++){
       apps.push([]);
   }
@@ -590,12 +589,12 @@ function moveCharms()
 
 
 //----------------------------Ryan's Code Start----------------------------------------
- function activeIcon(app){
+/* function activeIcon(app){
      app.create = true;
      if(app.icon ==  'app')
        createAppIcon(app);
      canvas.deactivateAll();
- }
+ }*/
 function createApps(){
     createWeather(apps[0][0]);
     createCalender(apps[2][0]);
@@ -1034,8 +1033,7 @@ function createNoteApp(){
 
             groupPic.on('selected',function(){
               updateNoteApp(false,3);
-              charmBar[0].active=false;
-              activeIcon(charmBar[0]);
+              createMessage();
               canvas.deactivateAll();
 
             })
@@ -1107,8 +1105,6 @@ function createNoteApp(){
             circle1.on('selected',function(){
               updateNoteApp(false,4);
               updateNoteApp(false,1);
-              charmBar[0].active=false;
-              activeIcon(charmBar[0]);
               canvas.deactivateAll();
             })
           }
@@ -1127,8 +1123,6 @@ function createNoteApp(){
             circle2.on('selected',function(){
               updateNoteApp(false,4);
               updateNoteApp(false,1);
-              charmBar[0].active=false;
-              activeIcon(charmBar[0]);
               canvas.deactivateAll();
             })
           }
@@ -1146,8 +1140,6 @@ function createNoteApp(){
             circle3.on('selected',function(){
               updateNoteApp(false,4);
               updateNoteApp(false,1);
-              charmBar[0].active=false;
-              activeIcon(charmBar[0]);
               canvas.deactivateAll();
             })
           }
@@ -1815,6 +1807,12 @@ function closeApp(name){
         updateNoteApp(false,0)
 }
 
+function createMessage(){
+  messageBody = noteBoxPic.clone(function(c){
+    canvas.add(c.set({left:appPic.left,top:appPic.top}));
+  })
+
+}
 
 
 
