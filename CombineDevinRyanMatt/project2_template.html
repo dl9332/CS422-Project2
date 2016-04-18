@@ -9,6 +9,7 @@
   <!-- Get version 1.5.0 of Fabric.js from CDN -->
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js" ></script>-->
   <script type="text/javascript" src="offlineFabric.js"></script>
+  <script src="weather.js" ></script>
 
 
 </head>
@@ -56,6 +57,10 @@
   var celsius = false
 ;
 ///---------Start of Ryan's variable declarations\\
+
+  var URL = 'http://api.openweathermap.org/data/2.5/forecast/city?q=';
+  var jsonCity = 'London,uk';
+  var apiCode ='&APPID=aa4e2383e2f4acc395aeb12aa81c13ad';
   var charmBar = [];
   var apps = [];
   var appIdx =0;
