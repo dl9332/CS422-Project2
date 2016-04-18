@@ -13,7 +13,7 @@
 
 </head>
 
-<body onload="setClock(); setTemp(); setDate();">
+<body onload="setClock(); setTemp(); setDate(); createApps();">
     <!-- canvas tag for Fabric.js to draw into -->
     <!-- set this to some appropriate size for your development work -->
     <!-- but keep the same aspect ratio -->
@@ -413,6 +413,20 @@ var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   appPic = canvas.getActiveObject();
 
   appPic.on('selected', function (){
+    if(charmBar[0].active==true) {
+        charmBar[0].active = false;
+        if(apps[appIdx][0].active==true){
+            closeApp(apps[appIdx][0].icon);
+            apps[appIdx][0].active=false;
+        }
+        activeIcon(charmBar[0]);
+        updateApps(false);
+    }
+    else if(charmBar[0].active==false) {
+        charmBar[0].active = true;
+        activeIcon(charmBar[0]);
+        updateApps(true);
+    }
     canvas.deactivateAll();
   });
 
@@ -421,6 +435,8 @@ var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
     moveUsers();
+    updateAppPos();
+    updateCamPos();
     debugLog();
     canvas.renderAll();
   });
@@ -432,6 +448,8 @@ var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   appPic.lockMovementX = true;
   appPic.lockMovementY = false;}
 );
+
+//createAppIcon(charmBar[0]);
 
 
 var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(img) {
@@ -814,7 +832,7 @@ canvas.add(devinText);
  function activeIcon(app){
      app.create = true;
      if(app.icon ==  'app')
-       createAppIcon(app);
+       //createAppIcon(app);
      canvas.deactivateAll();
  }
 
@@ -828,10 +846,7 @@ function createApps(){
     createDoorCamApp();
     createNoteApp();
     createWeatherApp();
-
 }
-
-window.onload=createApps();
 
 
 function createWeatherApp(){
@@ -2054,8 +2069,6 @@ function closeApp(name){
         updateNoteApp(false,0);
 
 }
-
-
 
 
 
