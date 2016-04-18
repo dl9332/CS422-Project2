@@ -1,4 +1,3 @@
-
 <!-- template for Project 2 - CS 422 - Spring 2016 - Group 2 -->
 
 <!DOCTYPE html>    
@@ -25,14 +24,11 @@
 
  
 <script>
-
 // the aspect ratios given here are not quite tall enough for a 36" x 80" door
 // we are assuming bottom 15 inches of the door are not part of the display. 
 // that part contains lots of necessary electronics so the bottom of the door
 // sits off the bottom of our display wall. You are implementing the interface
 // for the top 65" of the display / door
-
-
 // within the code below I assume I am drawing into a 1220x990 box
 // then I can scale the group to whatever size the final canvas is
   var localHeight = 2200;
@@ -51,13 +47,11 @@
   var insideKnobStartX = topLeftInsideDoor + doorWidth - doorKnobRadius - charmOffsetX;
   var outsideKnobStartX = topLeftOutsideDoor + doorKnobRadius + charmOffsetX;
   var userPic, emergencyPic, appPic, settingsPic, weatherPic, devinPic, tomPic, mikePic, mattPic, devinText;
-
   var canvas = this.__canvas = new fabric.Canvas('c');
   var military = false;
   var celsius = false
 ;
 ///---------Start of Ryan's variable declarations\\
-
   var URL = 'http://api.openweathermap.org/data/2.5/forecast/city?q=';
   var jsonCity = 'London,uk';
   var apiCode ='&APPID=aa4e2383e2f4acc395aeb12aa81c13ad';
@@ -73,21 +67,15 @@ apps[2].push({icon:"calender",fp:'resources/calender',active:false,create:false}
 apps[3].push({icon:"doorCam",fp:'resources/doorCam',active:false,create:false});
 apps[4].push({icon:"notes",fp:'resources/notes',active:false,create:false,appIdx:0,last:0});
 apps[5].push({icon:"home",fp:'resources/home',active:false,create:false});
-
 apps[0].push({icon:"weatMenu",fp:'resources/weatMenu',active:false,create:false});
 apps[0].push({icon:"options",fp:'resources/options',active:false,create:false});
 apps[0].push({icon:"weathAdd",fp:'resources/weathAdd',active:false,create:false});
 apps[0].push({icon:"add",fp:'resources/add',active:false,create:false});
 apps[0].push({icon:"back",fp:'resources/back',active:false,create:false,index:0});
-
-
-
 apps[3].push({icon:"mirror",fp:'resources/mirror',active:false,create:false});
 apps[3].push({icon:"peepCam",fp:'resources/peepCam',active:false,create:false});
 apps[3].push({icon:"back",fp:'resources/back',active:false,create:false});
 apps[3].push({icon:"bar",fp:'resources/bar',active:false,create:false});
-
-
 apps[4].push({icon:"noteCam",fp:'resources/noteCam',active:false,create:false});
 apps[4].push({icon:"notePad",fp:'resources/notePad',active:false,create:false});
 apps[4].push({icon:"noteBox",fp:'resources/noteBox',active:false,create:false});
@@ -105,12 +93,9 @@ apps[4].push({icon:"rec2",fp:'resources/rec2',active:false,create:false});
 apps[4].push({icon:"defaultNote",fp:'resources/defaultRec',active:false,create:false});
 //---------------End of Ryan's Variable declartions
   var userSelect = false;
-
   // set background to blue to make it easier to see it
   canvas.backgroundColor = "#DDDDDD";  // light grey
-
 // need 36 wide instead of 40 as now
-
 //-------------DEBUG------------------------------
 var debug = new fabric.Text("DEBUG",{  
   left: topLeftOutsideDoor,
@@ -125,7 +110,6 @@ var debug = new fabric.Text("DEBUG",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 function debugLog()
 {
   var log = "UserIcon:" + userIcon.top + "\n" +
@@ -139,11 +123,7 @@ function debugLog()
   debug.setText(log);
 }
 //---------END-DEBUG------------------------------
-
-
-
 //--------Date-and-Time ---------------------------
-
 function setClock()
 {
   var today = new Date();
@@ -159,18 +139,15 @@ function setClock()
   canvas.renderAll();
   setTimeout(setClock,1000);
 }
-
 function setDate()
 {
   var today = new Date();
   var d = today.getDate();
   var m = today.getMonth() + 1;
   var y = today.getFullYear();
-
   date.setText(m + "/" + d + "/" + y);
   canvas.renderAll();
 }
-
 var clock = new fabric.Text("",{  
   left: topLeftInsideDoor + (doorWidth * (13/27)),
   top: localHeight/16,
@@ -184,7 +161,6 @@ var clock = new fabric.Text("",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 var date = new fabric.Text("",{
   left: topLeftInsideDoor + (doorWidth * (13/27)),
   top: localHeight/8,
@@ -198,7 +174,6 @@ var date = new fabric.Text("",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 var amPm = new fabric.Text("",{
   left: clock.getLeft() + 315,
   top: clock.getTop() + 70,
@@ -212,12 +187,8 @@ var amPm = new fabric.Text("",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 //----END-DATE-AND-TIME----------------------------
-
-
 //---DOOR-ELEMENTS---------------------------------
-
 var insideDoor = new fabric.Rect({
   left: topLeftInsideDoor,
   top: 0,
@@ -227,12 +198,9 @@ var insideDoor = new fabric.Rect({
   height: localHeight,
   angle: 0
 });
-
 // the doors will not be selectable or movable
 insideDoor.hasControls = insideDoor.hasBorders = false;
 insideDoor.lockMovementX = insideDoor.lockMovementY = true;
-
-
 var outsideDoor = new fabric.Rect({
   left: topLeftOutsideDoor,
   top: 0,
@@ -242,10 +210,8 @@ var outsideDoor = new fabric.Rect({
   height: localHeight,
   angle: 0
 });
-
 outsideDoor.hasControls = outsideDoor.hasBorders = false;
 outsideDoor.lockMovementX = outsideDoor.lockMovementY = true;
-
   
 // create a circle for the shower head location
 var insideHandle = new fabric.Circle({
@@ -254,7 +220,6 @@ var insideHandle = new fabric.Circle({
   lockMovementX: true,
   lockMovementY: true 
 });
-
 // create a circle for the shower head location
 var outsideHandle = new fabric.Circle({
   radius: doorKnobRadius, fill: 'grey', left: outsideKnobStartX, top: doorKnobStartY,   originX: 'center',
@@ -262,10 +227,7 @@ var outsideHandle = new fabric.Circle({
   lockMovementX: true,
   lockMovementY: true
 });
-
 //--END-DOOR-ELEMENTS---------------------------------
-
-
 //-----WEATHER----------------------------------------
 var weatherIcon = new fabric.Image.fromURL('resources/clouds.png', function(img) {
   img.set({
@@ -282,7 +244,6 @@ var weatherIcon = new fabric.Image.fromURL('resources/clouds.png', function(img)
   weatherPic.lockMovementX = true;
   weatherPic.lockMovementY = true;}
 );
-
 var degrees = new fabric.Text("72°",{
   left: insideHandle.getLeft(),
   top: localHeight/8,
@@ -296,15 +257,12 @@ var degrees = new fabric.Text("72°",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 function setTemp()
 {
   celsius ? degrees.setText(degrees.getText() + "C") : degrees.setText(degrees.getText() + "F");
   canvas.renderAll(); 
 }
 //-----END-WEATHER------------------------------------
-
-
 /*-----------------------------------------------------------------
 * CHARMS BAR
 *  -appIcon
@@ -313,7 +271,6 @@ function setTemp()
 *  -userIcon
 *///---------------------------------------------------------------
 var appToggle;
-
 var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
@@ -326,7 +283,6 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
   });
   canvas.add(img).setActiveObject(img);
   userPic = canvas.getActiveObject();
-
   userPic.on('moving', function animate(){
     emergencyPic.top = userPic.getTop() + quarterDoorHeight;
     if (appToggle != 1){
@@ -342,7 +298,6 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     debugLog();
     canvas.renderAll();
   });
-
   userPic.on('selected', function (){
     if(userSelect){
       showUsers(true);
@@ -354,16 +309,12 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     postCharmMove();
     canvas.deactivateAll();
   });
-
   userPic.on('modified', function (){
     postCharmMove();
   });
-
   userPic.lockMovementX = true;
   userPic.lockMovementY = false;}
 );
-
-
 var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
@@ -376,17 +327,11 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
   });
   canvas.add(img).setActiveObject(img);
   emergencyPic = canvas.getActiveObject();
-
   emergencyPic.on('selected', function (){
     canvas.deactivateAll();
   });
-
-
   emergencyPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
-
-
-
      if (appToggle != 1){
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
@@ -395,20 +340,21 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
      appPic2.top = emergencyPic.getTop() + quarterDoorHeight;
      settingsPic.top = appPic2.getTop() + quarterDoorHeight;
    }
-
     moveUsers();
     debugLog();
     canvas.renderAll();
   });
-
   emergencyPic.on('modified', function (){
     postCharmMove();
   });
-
   emergencyPic.lockMovementX = true; 
   emergencyPic.lockMovementY = false;}
 );
-
+var isDown;
+var isUp;
+var myVar
+function myFunction(){isUp = 2;}
+  
 var appIcon2 = new fabric.Image.fromURL('resources/app2.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
@@ -422,23 +368,43 @@ var appIcon2 = new fabric.Image.fromURL('resources/app2.png', function(img) {
   canvas.add(img).setActiveObject(img);
   appPic2 = canvas.getActiveObject();
 
-  appPic2.on('selected', function (){
-    
-    //hideApps();
-    closeHomeCal();
+  canvas.on('mouse:up', function(options) {
+         if (options.target == appPic2){
+          clearTimeout(myVar)
+        //  isUp =1;
+        
+        if(isUp == 1 && isDown == 1){
+         closeHomeCal();
       appPic.visible = true;
       appPic.top = appPic2.top;
     appPic2.visible = false;
     appToggle = 0;
-    //changes---Ryan
-    if(apps[appIdx][0].active==true){
+
+if(apps[appIdx][0].active==true){
       closeApp(apps[appIdx][0].icon);
       apps[appIdx][0].active=false;
     }
-    updateApps(false);
 
+    updateApps(false);
     canvas.deactivateAll();
+  }
+          }});
+
+
+
+canvas.on('mouse:down', function(options) {
+         if (options.target == appPic2){
+          isDown =1;
+          isUp = 1;
+         myVar =  setTimeout(myFunction, 100)
+
+  }});
+
+  appPic2.on('selected', function (){
+      
   });
+
+
 
   appPic2.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
@@ -448,17 +414,12 @@ var appIcon2 = new fabric.Image.fromURL('resources/app2.png', function(img) {
     debugLog();
     canvas.renderAll();
   });
-
   appPic2.on('modified', function (){
     postCharmMove();
   });
-
   appPic2.lockMovementX = true;
   appPic2.lockMovementY = false;}
 );
-
-
-
 var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
@@ -472,18 +433,40 @@ var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   canvas.add(img).setActiveObject(img);
   appPic = canvas.getActiveObject();
 
-  appPic.on('selected', function (){
-    //showApps();
+
+
+
+ canvas.on('mouse:up', function(options) {
+         if (options.target == appPic){
+          clearTimeout(myVar)
+        //  isUp =1;
+        
+        if(isUp == 1 && isDown == 1){
     updateApps(true);
     appPic2.visible = true;
     appPic2.top = appPic.top;
     appPic.visible = false;
     appToggle = 1;
-    canvas.renderAll();
-    canvas.deactivateAll();
+    //canvas.renderAll();
+    //canvas.deactivateAll();
+  }
+          }});
+
+
+
+canvas.on('mouse:down', function(options) {
+         if (options.target == appPic){
+          isDown =1;
+          isUp = 1;
+         myVar =  setTimeout(myFunction, 100)
+
+  }});
+
+
+
+  appPic.on('selected', function (){
+   
   });
-
-
   appPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
@@ -492,16 +475,12 @@ var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
     debugLog();
     canvas.renderAll();
   });
-
   appPic.on('modified', function (){
     postCharmMove();
   });
-
   appPic.lockMovementX = true;
   appPic.lockMovementY = false;}
 );
-
-
 var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(img) {
   img.set({
     left: topLeftInsideDoor + charmOffsetX,
@@ -514,15 +493,11 @@ var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(i
   });
   canvas.add(img).setActiveObject(img);
   settingsPic = canvas.getActiveObject();
-
   settingsPic.on('selected', function (){
     canvas.deactivateAll();
   });
-
   settingsPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
-
-
   if (appToggle != 1){
     
     appPic.top = settingsPic.getTop() - quarterDoorHeight;
@@ -533,46 +508,33 @@ var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(i
     appPic2.top = settingsPic.getTop() - quarterDoorHeight;
      emergencyPic.top = appPic2.getTop() - quarterDoorHeight;
    }
-
-
-
     
-
     moveUsers();
     debugLog();
     canvas.renderAll();
   });
-
   settingsPic.on('modified', function (){
     postCharmMove();
   });
-
   settingsPic.lockMovementX = true;
   settingsPic.lockMovementY = false;}
 );
-
-
-
 /*function slideDown()
 {
   var tempGroup = charmsBar;
-
   charmsBar = new fabric.Group([ charmsBar[3], charmsBar[0], charmsBar[1], charmsBar[2] ], {
     left: tempGroup.getLeft(),
     top: tempGroup.getTop()
   });
 }
-
 function slideUp()
 {
   var tempGroup = charmsBar;
-
   charmsBar = new fabric.Group([ charmsBar[1], charmsBar[2], charmsBar[3], charmsBar[0] ], {
     left: tempGroup.getLeft(),
     top: tempGroup.getTop()
   });
 }*/
-
 function moveCharms()
 {
   /*if(y < charmAppHW)
@@ -583,11 +545,7 @@ function moveCharms()
   {
     slideDown()
   }*/
-
-
 }
-
-
 //----------------------------Ryan's Code Start----------------------------------------
 /* function activeIcon(app){
      app.create = true;
@@ -609,8 +567,6 @@ createApps();
 function createWeatherApp(){
   iconPath = apps[0][1].fp;
   //canvas.remove(weatPic);
-
-
   weatherAppMain= new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: appPic.left *3, top: appPic.top -200, width: charmAppHW*3, height: charmAppHW+50, originX: 'left',
               originY: 'top', visible: false});
@@ -620,25 +576,18 @@ function createWeatherApp(){
             weatAppPic.lockMovementX = true;
             weatAppPic.lockMovementY = true;}
   );
-
-
   iconPath = apps[0][2].fp;
   optionsIcon= new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: appPic.left *7, top: appPic.top -190, width: charmAppHW-100, height: charmAppHW-100, originX: 'left',
               originY: 'top', visible: false});
             canvas.add(img).setActiveObject(img);
             optionsPic = canvas.getActiveObject();
-
             optionsPic.on('selected',function(){
-
               canvas.deactivateAll();
-
             })
-
             optionsPic.lockMovementX = true;
             optionsPic.lockMovementY = true;}
   );
-
   iconPath = apps[0][4].fp;
   addIcon= new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: appPic.left *7, top: appPic.top+80, width: charmAppHW -50, height: charmAppHW -50, originX: 'left',
@@ -661,13 +610,10 @@ function createWeatherApp(){
               //var json_obj = JSON.parse(get(URL+city+apiCode));
               canvas.deactivateAll();
             })
-
             addPic.lockMovementX = true;
             addPic.lockMovementY = true;}
   );
-
   iconPath = apps[0][5].fp;
-
   weatBack= new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: appPic.left*5.5, top: appPic.top+80, width: charmAppHW -50, height: charmAppHW -50, originX: 'left',
               originY: 'top', visible: false});
@@ -683,21 +629,17 @@ function createWeatherApp(){
                 updateWeatApp(false, 3);
               }
               canvas.deactivateAll();
-
             })
             backPic0.index = 0;
             backPic0.lockMovementX = true;
             backPic0.lockMovementY = true;}
   );
-
-
   clouds= new fabric.Image.fromURL('resources/clouds.png', function(img) {
             img.set({left: appPic.left *6.5, top: appPic.top-100, width: charmAppHW-100, height: charmAppHW-100, originX: 'left',
               originY: 'top', visible: false, lockMovementX: true, lockMovementY:true});
             canvas.add(img).setActiveObject(img);
             cloudsPic = canvas.getActiveObject();}
   );
-
 }
 var textBuff = ({text:null,active:false,count:0});
 var line = [];
@@ -776,7 +718,6 @@ function createWeather(icon) {
             weatPic.lockMovementY = true;}
   );
 }
-
 function createCalender(icon) {
     iconPath = icon.fp;
     calenderIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
@@ -898,13 +839,11 @@ function createDoorCamApp(){
                   apps[4][0].appIdx=0;
                   apps[4][0].active = false;
                 }
-
               }
             canvas.deactivateAll();})
             backPic.lockMovementX = true;
             backPic.lockMovementY = true;}
   );
-
   outsideBG = new fabric.Image.fromURL('resources/outside.png', function(img) {
             img.set({
               left:topLeftInsideDoor, top:0, width:doorWidth, height:localHeight, originX: 'left',
@@ -920,14 +859,11 @@ function createDoorCamApp(){
 function createNoteApp(){
   iconPath = apps[4][1].fp;
   noteCamIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *3 , top: appPic.top *1, width: charmAppHW, height: charmAppHW,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             noteCamPic = canvas.getActiveObject();
-
             noteCamPic.on('selected',function(){
               updateNoteApp(false,0);
               updateNoteApp(true,6);
@@ -935,122 +871,87 @@ function createNoteApp(){
             })
           }
   );
-
-
   iconPath = apps[4][2].fp;
   notePadIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *5 , top: appPic.top *1, width: charmAppHW, height: charmAppHW,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             notePadPic = canvas.getActiveObject();
-
             notePadPic.on('selected',function(){
               updateNoteApp(true,2);
               canvas.deactivateAll();
             })
           }
   );
-
-
-
   iconPath = apps[4][3].fp;
   noteBoxIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *4 , top: appPic.top -200, width: charmAppHW+300, height: charmAppHW+400,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             noteBoxPic = canvas.getActiveObject();
             noteAppText();
           }
   );
-
-
   iconPath = apps[4][5].fp;
   noteBarIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left*4.2 , top: appPic.top-160, width:charmAppHW, height: charmAppHW-130,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             noteBarPic = canvas.getActiveObject();
-
           }
   );
-
   iconPath = apps[4][4].fp;
   postItIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *4.1 , top: appPic.top -170, width: charmAppHW-100, height: charmAppHW-100,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             postItPic = canvas.getActiveObject();
-
             postItPic.on('selected',function(){
               updateNoteApp(false,2);
               updateNoteApp(true,3);
               canvas.deactivateAll();
             })
-
           }
   );
-
   iconPath = apps[4][6].fp;
   backIcon1 = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *5.2 , top: appPic.top -170, width:charmAppHW-100, height: charmAppHW-100,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             backPic1 = canvas.getActiveObject();
-
             backPic1.on('selected',function(){
               updateNoteApp(false,2)
               updateNoteApp(true,1);
               canvas.deactivateAll();
             })
-
           }
   );
-
   iconPath = apps[4][7].fp;
   groupIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *3 , top: appPic.top *1, width: charmAppHW-20, height: charmAppHW-20,
               originX: 'left', originY: 'top', visible:false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             groupPic = canvas.getActiveObject();
-
             groupPic.on('selected',function(){
               updateNoteApp(false,3);
               createMessage();
               canvas.deactivateAll();
-
             })
           }
   );
-
-
   iconPath = apps[4][8].fp;
   singleIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *5 , top: appPic.top *1, width: charmAppHW-20, height: charmAppHW-20,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             singlePic = canvas.getActiveObject();
-
             singlePic.on('selected',function(){
               updateNoteApp(false,3);
               updateNoteApp(true,4);
@@ -1058,34 +959,26 @@ function createNoteApp(){
             })
           }
   );
-
   iconPath = apps[4][9].fp;
   leftIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left, top: appPic.top+270, width: charmAppHW, height: charmAppHW,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             leftPic = canvas.getActiveObject();
-
             leftPic.on('selected',function(){
               //updateNoteApp(true,5);
               canvas.deactivateAll();
             })
           }
   );
-
   iconPath = apps[4][10].fp;
   rightIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left*9 , top: appPic.top+250, width: charmAppHW, height: charmAppHW,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             rightPic = canvas.getActiveObject();
-
             rightPic.on('selected',function(){
               //updateNoteApp(true,5);
               canvas.deactivateAll();
@@ -1094,14 +987,11 @@ function createNoteApp(){
   );
   iconPath = apps[4][11].fp;
   circleIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *3 , top: appPic.top+250, width: charmAppHW, height: charmAppHW,
               originX: 'left', originY: 'top', visible:false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             circle1 = canvas.getActiveObject();
-
             circle1.on('selected',function(){
               updateNoteApp(false,4);
               updateNoteApp(false,1);
@@ -1109,17 +999,12 @@ function createNoteApp(){
             })
           }
   );
-
-
   circleIcon2 = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *5 , top: appPic.top+250, width: charmAppHW, height: charmAppHW,
               originX: 'left', originY: 'top', visible:false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             circle2 = canvas.getActiveObject();
-
             circle2.on('selected',function(){
               updateNoteApp(false,4);
               updateNoteApp(false,1);
@@ -1127,16 +1012,12 @@ function createNoteApp(){
             })
           }
   );
-
   circleIcon3 = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *7 , top: appPic.top+250, width: charmAppHW, height: charmAppHW,
               originX: 'left', originY: 'top', visible:false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             circle3 = canvas.getActiveObject();
-
             circle3.on('selected',function(){
               updateNoteApp(false,4);
               updateNoteApp(false,1);
@@ -1144,7 +1025,6 @@ function createNoteApp(){
             })
           }
   );
-
   iconPath = apps[3][4].fp;
   recBar = new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: appPic.left*4, top: appPic.top+50, width: charmAppHW*2, height: charmAppHW-100, originX: 'left',
@@ -1153,31 +1033,23 @@ function createNoteApp(){
             recBarPic = canvas.getActiveObject();
           }
   );
-
   iconPath = apps[4][12].fp;
-
   recNoteIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: appPic.left*4, top: appPic.top-400, width: charmAppHW*2, height: charmAppHW*2, originX: 'left',
               originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
             canvas.add(img).setActiveObject(img);
-
             recNotePic = canvas.getActiveObject();
-
             blackBox = new fabric.Rect({left:recNotePic.left+30, top:recNotePic.top+80,width:charmAppHW+150,height:charmAppHW+110,
               originX:'left',originY:'top',visible:false,lockMovementX:true,lockMovementY:true});
             canvas.add(blackBox);
-
             recNotePic.on('selected',function(){
               updateNoteApp(false,6);
               updateNoteApp(true,3);
               canvas.deactivateAll();
-
             })
           }
   );
-
   iconPath = apps[4][13].fp;
-
   recIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: appPic.left*5.5, top: appPic.top+10, width: charmAppHW -40, height: charmAppHW -40, originX: 'left',
               originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
@@ -1189,11 +1061,9 @@ function createNoteApp(){
               blackBox.visible=false;
               defaultNotePic.visible=true;
               canvas.deactivateAll();
-
             })
           }
   );
-
   iconPath = apps[4][14].fp;
   recIcon2 = new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: appPic.left*5.5, top: appPic.top+10, width: charmAppHW -40, height: charmAppHW -40, originX: 'left',
@@ -1206,44 +1076,33 @@ function createNoteApp(){
               recPic2.visible=false;
               defaultNotePic.visible=false;
               canvas.deactivateAll();
-
             })
-
           }
   );
-
   iconPath = apps[4][4].fp;
   postItIcon2 = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-
             img.set({left: appPic.left *3.5 , top: appPic.top+10, width: charmAppHW, height: charmAppHW,
               originX: 'left', originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
             });
-
             canvas.add(img).setActiveObject(img);
             postItPic2 = canvas.getActiveObject();
-
             postItPic2.on('selected',function(){
               updateNoteApp(false,6);
               updateNoteApp(true,3);
               canvas.deactivateAll();
             })
-
           }
   );
-
   iconPath = apps[4][15].fp;
   defaultNote = new fabric.Image.fromURL(iconPath +'.png', function(img) {
             img.set({left: recNotePic.left+30, top: recNotePic.top+80, width: charmAppHW+150, height: charmAppHW+110, originX: 'left',
               originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
             canvas.add(img).setActiveObject(img);
-
             defaultNotePic = canvas.getActiveObject();
             canvas.add(blackBox);
           }
   );
-
 }
-
 function noteAppText(){
     noteHeader = new fabric.Text("New Note", {left:appPic.left+380,top:appPic.top-80,fontFamily: 'Arial',fill:'black', fontSize: 40, fontWeight: 'italic', originX: 'left',
         originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
@@ -1293,164 +1152,150 @@ function createHome(icon) {
     );
 }
 function updateAppPos(){
-    weatPic.top = appPic.top - 200;
+    weatPic.top = appPic2.top - 200;
     canvas.remove(weatPic);
     canvas.add(weatPic);
-    calenderPic.top = appPic.top - 200;
+    calenderPic.top = appPic2.top - 200;
     canvas.remove(calenderPic);
     canvas.add(calenderPic);
-    doorCamPic.top = appPic.top;
+    doorCamPic.top = appPic2.top;
     canvas.remove(doorCamPic);
     canvas.add(doorCamPic);
-    notesPic.top = appPic.top;
+    notesPic.top = appPic2.top;
     canvas.remove(notesPic);
     canvas.add(notesPic);
-    homePic.top = appPic.top;
+    homePic.top = appPic2.top;
     canvas.remove(homePic);
     canvas.add(homePic);
-
      //Change Added///////////////////////////////////////
-    homePic2.top = appPic.top-500;
+    homePic2.top = appPic2.top-500;
     canvas.remove(homePic2);
     canvas.add(homePic2);
-    lightpic.top = appPic.top;
+    lightpic.top = appPic2.top;
     canvas.remove(lightpic);
     canvas.add(lightpic);
-    homeLockPic.top = appPic.top;
+    homeLockPic.top = appPic2.top;
     canvas.remove(homeLockPic);
     canvas.add(homeLockPic);
-    homeLockPic2.top = appPic.top-500;
+    homeLockPic2.top = appPic2.top-500;
     canvas.remove(homeLockPic2);
     canvas.add(homeLockPic2);
-    thermPic.top = appPic.top;
+    thermPic.top = appPic2.top;
     canvas.remove(thermPic);
     canvas.add(thermPic);
-    thermPic2.top = appPic.top-500;
+    thermPic2.top = appPic2.top-500;
     canvas.remove(thermPic2);
     canvas.add(thermPic2);
-    homeBackPic.top = appPic.top+200;
+    homeBackPic.top = appPic2.top+200;
     canvas.remove(homeBackPic);
     canvas.add(homeBackPic);
-     tempBackPic.top = appPic.top+300;
+     tempBackPic.top = appPic2.top+300;
     canvas.remove(tempBackPic);
     canvas.add(tempBackPic);
-    tempAdjPic.top = appPic.top+300;
+    tempAdjPic.top = appPic2.top+300;
     canvas.remove(tempAdjPic);
     canvas.add(tempAdjPic);
-
-    unlockPic1.top = appPic.top-200;
+    unlockPic1.top = appPic2.top-200;
     canvas.remove(unlockPic1);
     canvas.add(unlockPic1);
-      unlockPic2.top = appPic.top-50;
+      unlockPic2.top = appPic2.top-50;
     canvas.remove(unlockPic2);
     canvas.add(unlockPic2);
-      unlockPic3.top = appPic.top+100;
+      unlockPic3.top = appPic2.top+100;
     canvas.remove(unlockPic3);
     canvas.add(unlockPic3);
-      unlockPic4.top = appPic.top+250;
+      unlockPic4.top = appPic2.top+250;
     canvas.remove(unlockPic4);
     canvas.add(unlockPic4);
-
   
-    homeDoorPic.top = appPic.top+400;
+    homeDoorPic.top = appPic2.top+400;
     canvas.remove(homeDoorPic);
     canvas.add(homeDoorPic);
-
-    lockBackPic.top = appPic.top+400;
+    lockBackPic.top = appPic2.top+400;
     canvas.remove(lockBackPic);
     canvas.add(lockBackPic);
-
     
-
-    lockPic1.top = appPic.top-200;
+    lockPic1.top = appPic2.top-200;
     canvas.remove(lockPic1);
     canvas.add(lockPic1);
-    lockPic2.top = appPic.top-50;
+    lockPic2.top = appPic2.top-50;
     canvas.remove(lockPic2);
     canvas.add(lockPic2);
-    lockPic3.top = appPic.top+100;
+    lockPic3.top = appPic2.top+100;
     canvas.remove(lockPic3);
     canvas.add(lockPic3);
-    lockPic4.top = appPic.top+250;
+    lockPic4.top = appPic2.top+250;
     canvas.remove(lockPic4);
     canvas.add(lockPic4);
-
-     lightpic2.top = appPic.top-500;
+     lightpic2.top = appPic2.top-500;
     canvas.remove(lightpic2);
     canvas.add(lightpic2);
-
-    lightOnPic1.top = appPic.top-200;
+    lightOnPic1.top = appPic2.top-200;
     canvas.remove(lightOnPic1);
     canvas.add(lightOnPic1);
-    lightOnPic2.top = appPic.top-50;
+    lightOnPic2.top = appPic2.top-50;
     canvas.remove(lightOnPic2);
     canvas.add(lightOnPic2);
-    lightOnPic3.top = appPic.top+100;
+    lightOnPic3.top = appPic2.top+100;
     canvas.remove(lightOnPic3);
     canvas.add(lightOnPic3);
-    lightOnPic4.top = appPic.top+250;
+    lightOnPic4.top = appPic2.top+250;
     canvas.remove(lightOnPic4);
     canvas.add(lightOnPic4);
-    lightOnPic5.top = appPic.top+400;
+    lightOnPic5.top = appPic2.top+400;
     canvas.remove(lightOnPic5);
     canvas.add(lightOnPic5);
-
-      lightOffPic1.top = appPic.top-200;
+      lightOffPic1.top = appPic2.top-200;
     canvas.remove(lightOffPic1);
     canvas.add(lightOffPic1);
-    lightOffPic2.top = appPic.top-50;
+    lightOffPic2.top = appPic2.top-50;
     canvas.remove(lightOffPic2);
     canvas.add(lightOffPic2);
-    lightOffPic3.top = appPic.top+100;
+    lightOffPic3.top = appPic2.top+100;
     canvas.remove(lightOffPic3);
     canvas.add(lightOffPic3);
-    lightOffPic4.top = appPic.top+250;
+    lightOffPic4.top = appPic2.top+250;
     canvas.remove(lightOffPic4);
     canvas.add(lightOffPic4);
-    lightOffPic5.top = appPic.top+400;
+    lightOffPic5.top = appPic2.top+400;
     canvas.remove(lightOffPic5);
     canvas.add(lightOffPic5);
-
-    homeLightPic.top = appPic.top+550;
+    homeLightPic.top = appPic2.top+550;
     canvas.remove(homeLightPic);
     canvas.add(homeLightPic);
-     lightBackPic.top = appPic.top+550;
+     lightBackPic.top = appPic2.top+550;
     canvas.remove(lightBackPic);
     canvas.add(lightBackPic);
-
-
-    calendarPic2.top = appPic.top-500;
+    calendarPic2.top = appPic2.top-500;
     canvas.remove(calendarPic2);
     canvas.add(calendarPic2);
-    monthPic2.top = appPic.top-500;
+    monthPic2.top = appPic2.top-500;
     canvas.remove(monthPic2);
     canvas.add(monthPic2);
-    toDoPic2.top = appPic.top-500;
+    toDoPic2.top = appPic2.top-500;
     canvas.remove(toDoPic2);
     canvas.add(toDoPic2);
-    toDoBackPic.top = appPic.top+500;
+    toDoBackPic.top = appPic2.top+500;
     canvas.remove(toDoBackPic);
     canvas.add(toDoBackPic);
-    monthBackPic.top = appPic.top+500;
+    monthBackPic.top = appPic2.top+500;
     canvas.remove(monthBackPic);
     canvas.add(monthBackPic);
-    monthPic.top = appPic.top;
+    monthPic.top = appPic2.top;
     canvas.remove(monthPic);
     canvas.add(monthPic);
-    toDoPic.top = appPic.top;
+    toDoPic.top = appPic2.top;
     canvas.remove(toDoPic);
     canvas.add(toDoPic);
-     calendarBackPic.top = appPic.top+200;
+     calendarBackPic.top = appPic2.top+200;
     canvas.remove(calendarBackPic);
     canvas.add(calendarBackPic);
-    listPic.top = appPic.top-200;
+    listPic.top = appPic2.top-200;
     canvas.remove(listPic);
     canvas.add(listPic);
-     fullMonthPic.top = appPic.top-200;
+     fullMonthPic.top = appPic2.top-200;
     canvas.remove(fullMonthPic);
     canvas.add(fullMonthPic);
-
-
     //Change Ends////////////////////////////////////////
 }
 function updateCamApp(isVisible,menuId){
@@ -1499,7 +1344,6 @@ function updateCamApp(isVisible,menuId){
       mirrorPic2.visible = false;
       camMenuPic.visible = false;
     }
-
   }
   else{
     if(isVisible==true){
@@ -1508,12 +1352,9 @@ function updateCamApp(isVisible,menuId){
       backPic.visible = true;
       mirrorPic.visible = true;
     }
-
   }
 }
 function updateWeatApp(isVisible,menuId){
-
-
   if(menuId==1){
     if(isVisible==true) {
       apps[0][1].active=true;
@@ -1537,7 +1378,6 @@ function updateWeatApp(isVisible,menuId){
       searchText.text="Search Cities";
       backPic0.index = 1;
     }
-
   }
   else if(menuId==2){
     if(isVisible==true) {
@@ -1579,7 +1419,6 @@ function updateWeatApp(isVisible,menuId){
     }
   }
 }
-
 function updateNoteApp(isVisible,menuId){
   if(menuId==1){
     if(isVisible==true) {
@@ -1610,14 +1449,12 @@ function updateNoteApp(isVisible,menuId){
       backPic1.visible = true;
       noteHeader.visible = true;
       message.visible = true;
-
       noteBoxPic.bringToFront();
       //noteBarPic.bringToFront();
       postItPic.bringToFront();
       backPic1.bringToFront();
       noteHeader.bringToFront();
       message.bringToFront();
-
       noteCamPic.visible = false;
       notePadPic.visible = false;
       backPic.visible = false;
@@ -1635,7 +1472,6 @@ function updateNoteApp(isVisible,menuId){
       noteHeader.visible=false;
       message.visible=false;
     }
-
   }
   else if(menuId==3){
     if(isVisible==true){
@@ -1735,7 +1571,6 @@ function updateNoteApp(isVisible,menuId){
       defaultNotePic.visible=false;
     }
   }
-
   else{
     if(isVisible==false){
       noteCamPic.visible = false;
@@ -1763,10 +1598,8 @@ function updateNoteApp(isVisible,menuId){
       blackBox.visible=false;
       defaultNotePic.visible=false;
     }
-
   }
 }
-
 /*function updateCamPos(){
     backPic.top = appPic.top *1.02;
     peepPic.top = appPic.top;
@@ -1806,38 +1639,22 @@ function closeApp(name){
     else if(name=="notes")
         updateNoteApp(false,0)
 }
-
 function createMessage(){
   messageBody = noteBoxPic.clone(function(c){
     canvas.add(c.set({left:appPic.left,top:appPic.top}));
   })
-
 }
-
-
-
-
-
-
 //---------------------------Ryan's Code End
-
-
-
 //---------------------------Matts Code Start
-
 //**********Sections in Ryans code were I made changes are marked between comments like this**********//
-
 //Change Starts////////////////////////////////////////
 //Code
 //Change Ends////////////////////////////////////////
-
 //so just ctrl+f and type Change starts to find changes
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 //Start of adding items to canvas//////
-
  homeIcon2 = new fabric.Image.fromURL('resources/home2.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 - 500,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1849,7 +1666,6 @@ function createMessage(){
  homePic2.lockMovementY=true;
   homePic2.lockMovementX=true;
 });
-
   lighticon = new fabric.Image.fromURL('resources/light.png',function(img) { 
  img.set({left: appPic.left *7 - 25, top: appPic.top * 1 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1861,7 +1677,6 @@ function createMessage(){
  lightpic.lockMovementY=true;
   lightpic.lockMovementX=true;
 });
-
    lighticon2 = new fabric.Image.fromURL('resources/light2.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 - 500,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1873,7 +1688,6 @@ function createMessage(){
  lightpic2.lockMovementY=true;
   lightpic2.lockMovementX=true;
 });
-
   homeLockIcon = new fabric.Image.fromURL('resources/homeLock.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1885,7 +1699,6 @@ function createMessage(){
  homeLockPic.lockMovementY=true;
   homeLockPic.lockMovementX=true;
 });
-
     homeLockIcon2 = new fabric.Image.fromURL('resources/homeLock2.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 - 500,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1897,7 +1710,6 @@ function createMessage(){
  homeLockPic2.lockMovementY=true;
   homeLockPic2.lockMovementX=true;
 });
-
   thermIcon = new fabric.Image.fromURL('resources/therm.png',function(img) { 
  img.set({left: appPic.left *7 - 425, top: appPic.top * 1 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1909,7 +1721,6 @@ function createMessage(){
  thermPic.lockMovementY=true;
   thermPic.lockMovementX=true;
 });
-
    thermIcon2 = new fabric.Image.fromURL('resources/therm2.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 -500 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1921,7 +1732,6 @@ function createMessage(){
  thermPic2.lockMovementY=true;
   thermPic2.lockMovementX=true;
 });
-
    tempAdj = new fabric.Image.fromURL('resources/tmpAdj.png',function(img) { 
  img.set({left: appPic.left *7 + 100, top: appPic.top * 1 + 300 ,  width: charmAppHW -800, height: charmAppHW- 800, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1933,8 +1743,6 @@ function createMessage(){
  tempAdjPic.lockMovementY=true;
   tempAdjPic.lockMovementX=true;
 });
-
-
     homeBack = new fabric.Image.fromURL('resources/back.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 + 200 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1957,7 +1765,6 @@ function createMessage(){
  tempBackPic.lockMovementY=true;
   tempBackPic.lockMovementX=true;
 });
-
        lockBack = new fabric.Image.fromURL('resources/back.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 + 450 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1969,7 +1776,6 @@ function createMessage(){
  lockBackPic.lockMovementY=true;
   lockBackPic.lockMovementX=true;
 });
-
               lockBack = new fabric.Image.fromURL('resources/back.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 + 450 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1981,7 +1787,6 @@ function createMessage(){
  lockBackPic.lockMovementY=true;
   lockBackPic.lockMovementX=true;
 });
-
        lightBack = new fabric.Image.fromURL('resources/back.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 + 550 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -1993,8 +1798,6 @@ function createMessage(){
  lightBackPic.lockMovementY=true;
   lightBackPic.lockMovementX=true;
 });
-
-
   //Lock page images Start///////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////////////////start unlock icons/////////////////////////////////////////////////////
  homedoorIcon = new fabric.Image.fromURL('resources/homeDoors.png',function(img) { 
@@ -2007,9 +1810,6 @@ function createMessage(){
  homeDoorPic.lockMovementY=true;
   homeDoorPic.lockMovementX=true;
 });
-
-
-
  unlockIcon1 = new fabric.Image.fromURL('resources/homeUnlock.png',function(img) { 
  img.set({left: appPic.left *7 + 25, top: appPic.top * 1 - 200 ,  width: charmAppHW -70, height: charmAppHW- 70, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -2102,10 +1902,8 @@ function createMessage(){
 });
 //////////////////////////////////End Lock icons////////////////////////////////////////////////////////////////////////////////////////////
 var lockArr = [5];
-
 //Lock unlock function
 function houseLocks(menuID,state){
-
   if(menuID == 1){
     if(state == 0){
       unlockPic1.visible = false;
@@ -2117,7 +1915,6 @@ function houseLocks(menuID,state){
       unlockPic1.visible=true;
        lockArr[0]=0;
     }
-
   }
   else if(menuID == 2){
        if(state == 0){
@@ -2156,11 +1953,7 @@ function houseLocks(menuID,state){
     }
   }
 }
-
-
  //Lock page images End///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
  //Light page images Start///////////////////////////////////////////////////////////////////////////////////////////////////////////
   homeLightIcon = new fabric.Image.fromURL('resources/lightRooms.png',function(img) { 
  img.set({left: appPic.left *7 + 25, top: appPic.top * 1 + 550 ,  width: charmAppHW -700, height: charmAppHW- 950, originX: 'left', originY: 'top', visible: false});
@@ -2228,10 +2021,8 @@ function houseLocks(menuID,state){
  lightOnPic5.lockMovementY=true;
   lightOnPic5.lockMovementX=true;
 });
-
   ///////////////////////End Light On icons/////////////////////////////////////////////////////
     ///////////////////////start Light Off icons/////////////////////////////////////////////////////
-
       lightOffIcon1 = new fabric.Image.fromURL('resources/lightOff.png',function(img) { 
  img.set({left: appPic.left *7 + 25, top: appPic.top * 1 - 200 ,  width: charmAppHW -100, height: charmAppHW- 80, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -2288,15 +2079,9 @@ function houseLocks(menuID,state){
   lightOffPic5.lockMovementX=true;
 });
   ///////////////////////end Light Off icons/////////////////////////////////////////////////////
-
-
 var lightArr = [5];
-
-
-
 //Light on/off function
 function houseLights(menuID,state){
-
   if(menuID == 1){
     if(state == 0){
       lightOnPic1.visible = false;
@@ -2308,7 +2093,6 @@ function houseLights(menuID,state){
       lightOnPic1.visible=true;
       lightArr[0] = 0;
     }
-
   }
   else if(menuID == 2){
        if(state == 0){
@@ -2359,17 +2143,12 @@ function houseLights(menuID,state){
     }
   }
 }
-
   //Light page images End///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 //End of adding items to canvas//////
 ///////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 //Home menu function
-
 function homeMenu(menuOption){
   //Hit home button brining up home options
 if(menuOption == 1){
@@ -2428,7 +2207,6 @@ else if (lockArr[0] != 1){
 unlockPic1.visible = true;
 lockPic1.visible = false;
 }
-
 if(lockArr[1] == 1){
   lockPic2.visible = true;
   unlockPic2.visible = false;
@@ -2437,7 +2215,6 @@ else if (lockArr[1] != 1){
 unlockPic2.visible = true;
 lockPic2.visible = false;
 }
-
 if(lockArr[2] == 1){
   lockPic3.visible = true;
   unlockPic3.visible = false;
@@ -2446,7 +2223,6 @@ else if (lockArr[2] != 1){
 unlockPic3.visible = true;
 lockPic3.visible = false;
 }
-
 if(lockArr[3] == 1){
   lockPic4.visible = true;
   unlockPic4.visible = false;
@@ -2455,8 +2231,6 @@ else if (lockArr[4] != 1){
 unlockPic4.visible = true;
 lockPic4.visible = false;
 }
-
-
 lockBackPic.visible = true;
 }
 //Hit back button in lock menu goes back to home menu
@@ -2486,7 +2260,6 @@ lightpic.visible = false;
 homeLockPic.visible = false;
 homeBackPic.visible = false;
 lightpic2.visible = true;
-
 if(lightArr[0] == 1){
   lightOffPic1.visible = true;
   lightOnPic1.visible = false;
@@ -2495,8 +2268,6 @@ else if (lightArr[0] != 1){
 lightOnPic1.visible = true;
 lightOffPic1.visible = false;
 }
-
-
 if(lightArr[1] == 1){
   lightOffPic2.visible = true;
   lightOnPic2.visible = false;
@@ -2505,7 +2276,6 @@ else if (lightArr[1] != 1){
 lightOnPic2.visible = true;
 lightOffPic2.visible = false;
 }
-
 if(lightArr[2] == 1){
   lightOffPic3.visible = true;
   lightOnPic3.visible = false;
@@ -2514,7 +2284,6 @@ else if (lightArr[2] != 1){
 lightOnPic3.visible = true;
 lightOffPic3.visible = false;
 }
-
 if(lightArr[3] == 1){
   lightOffPic4.visible = true;
   lightOnPic4.visible = false;
@@ -2523,7 +2292,6 @@ else if (lightArr[3] != 1){
 lightOnPic4.visible = true;
 lightOffPic4.visible = false;
 }
-
 if(lightArr[4] == 1){
   lightOffPic5.visible = true;
   lightOnPic5.visible = false;
@@ -2532,7 +2300,6 @@ else if (lightArr[4] != 1){
 lightOnPic5.visible = true;
 lightOffPic5.visible = false;
 }
-
 homeLightPic.visible = true;
 lightBackPic.visible = true;
 }
@@ -2543,7 +2310,6 @@ thermPic.visible = true;
 lightpic.visible = true;
 homeLockPic.visible = true;
 homeBackPic.visible = true;
-
 lightpic2.visible = false;
 lightOnPic1.visible = false;
 lightOnPic2.visible = false;
@@ -2558,11 +2324,8 @@ lightOffPic5.visible = false;
 homeLightPic.visible = false;
 lightBackPic.visible = false;
 }
-
 }
-
 //Calendar Start////////////////////////////
-
  calendarIcon2 = new fabric.Image.fromURL('resources/calender2.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 - 500,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -2574,7 +2337,6 @@ lightBackPic.visible = false;
  calendarPic2.lockMovementY=true;
   calendarPic2.lockMovementX=true;
 });
-
   monthIcon = new fabric.Image.fromURL('resources/month.png',function(img) { 
  img.set({left: appPic.left *7 - 125, top: appPic.top * 1 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -2586,19 +2348,16 @@ lightBackPic.visible = false;
  monthPic.lockMovementY=true;
   monthPic.lockMovementX=true;
 });
-
       monthIcon2 = new fabric.Image.fromURL('resources/month2.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 - 500,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
  monthPic2 = canvas.getActiveObject(img);
  monthPic2.on('selected',function(){
-
   canvas.deactivateAll();
  })
  monthPic2.lockMovementY=true;
   monthPic2.lockMovementX=true;
 });
-
         fullMonth = new fabric.Image.fromURL('resources/monthCal.png',function(img) { 
  img.set({left: appPic.left *7 - 425, top: appPic.top * 1 - 200,  width: charmAppHW +400, height: charmAppHW + 400, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -2609,8 +2368,6 @@ lightBackPic.visible = false;
  fullMonthPic.lockMovementY=true;
   fullMonthPic.lockMovementX=true;
 });
-
-
   toDoIcon = new fabric.Image.fromURL('resources/toDoList.png',function(img) { 
  img.set({left: appPic.left *7 - 325, top: appPic.top * 1 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -2622,19 +2379,16 @@ lightBackPic.visible = false;
  toDoPic.lockMovementY=true;
   toDoPic.lockMovementX=true;
 });
-
     toDoIcon2 = new fabric.Image.fromURL('resources/toDoList2.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 - 500,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
  toDoPic2 = canvas.getActiveObject(img);
  toDoPic2.on('selected',function(){
-
   canvas.deactivateAll();
  })
  toDoPic2.lockMovementY=true;
   toDoPic2.lockMovementX=true;
 });
-
       list = new fabric.Image.fromURL('resources/list.png',function(img) { 
  img.set({left: appPic.left *7 - 425, top: appPic.top * 1 - 200,  width: charmAppHW +400, height: charmAppHW + 400, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -2645,8 +2399,6 @@ lightBackPic.visible = false;
  listPic.lockMovementY=true;
   listPic.lockMovementX=true;
 });
-
-
     calendarBack = new fabric.Image.fromURL('resources/back.png',function(img) { 
  img.set({left: appPic.left *7 - 225, top: appPic.top * 1 + 200 ,  width: charmAppHW -30, height: charmAppHW- 30, originX: 'left', originY: 'top', visible: false});
  canvas.add(img).setActiveObject(img);;
@@ -2680,8 +2432,6 @@ lightBackPic.visible = false;
  monthBackPic.lockMovementY=true;
   monthBackPic.lockMovementX=true;
 });
-
-
   function calendarMenu(menuOption){
   //Hit calendar button brining up calendar options
 if(menuOption == 1){
@@ -2739,14 +2489,8 @@ monthPic2.visible = false;
 monthBackPic.visible = false;
 fullMonthPic.visible = false;
 }
-
 }
-
-
 //Calendar End/////////////////////////////
-
-
-
 //function to hide main app page apps
 function hideApps(){
     weatPic.visible = false;
@@ -2755,8 +2499,6 @@ function hideApps(){
         notesPic.visible = false;
          homePic.visible = false;
 }
-
-
 //Function to show main app page apps
 function showApps(){
     weatPic.visible = true;
@@ -2765,7 +2507,6 @@ function showApps(){
         notesPic.visible = true;
          homePic.visible = true;
 }
-
 function closeHomeCal(){
 monthPic2.visible = false;
 monthBackPic.visible = false;
@@ -2777,8 +2518,6 @@ calendarBackPic.visible = false;
 toDoPic2.visible = false;
 listPic.visible = false;
 toDoBackPic.visible = false;
-
-
 homePic2.visible = false;
 thermPic.visible = false;
 lightpic.visible = false;
@@ -2811,19 +2550,10 @@ lockPic4.visible = false;
 thermPic2.visible = false;
 tempAdjPic.visible = false;
 tempBackPic.visible = false;
-
 }
-
-
-
-
 //---------------------------Matts Code End
-
-
 //--------------------END-CHARMS-BAR-------------------------------
-
 //----USER-ICONS----------------------------
-
 var devinIcon = new fabric.Image.fromURL('resources/duck.png', function(img) {
   img.set({
     left: userPic.left + userPic.width + userOffsetX,
@@ -2845,14 +2575,9 @@ var devinIcon = new fabric.Image.fromURL('resources/duck.png', function(img) {
   devinPic.on('moving', function animate(){
     canvas.deactivateAll().renderAll();
   });
-
-
-
   devinPic.lockMovementX = true;
   devinPic.lockMovementY = false;}
 );
-
-
 var tomIcon = new fabric.Image.fromURL('resources/pig.png', function(img) {
   img.set({
     left: userPic.left + (2 * (userPic.width + userOffsetX)),
@@ -2877,7 +2602,6 @@ var tomIcon = new fabric.Image.fromURL('resources/pig.png', function(img) {
   userPic.lockMovementX = true;
   userPic.lockMovementY = false;}
 );
-
 var mattIcon = new fabric.Image.fromURL('resources/lamb.png', function(img) {
   img.set({
     left: userPic.left + (3 * (userPic.width + userOffsetX)),
@@ -2902,7 +2626,6 @@ var mattIcon = new fabric.Image.fromURL('resources/lamb.png', function(img) {
   mattPic.lockMovementX = true;
   mattPic.lockMovementY = false;}
 );
-
 var mikeIcon = new fabric.Image.fromURL('resources/dog.png', function(img) {
   img.set({
     left: userPic.left + userPic.width + userOffsetX,
@@ -2927,7 +2650,6 @@ var mikeIcon = new fabric.Image.fromURL('resources/dog.png', function(img) {
   mikePic.lockMovementX = true;
   mikePic.lockMovementY = false;}
 );
-
 var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
   img.set({
     left: userPic.left + (2 * (userPic.width + userOffsetX)),
@@ -2952,9 +2674,7 @@ var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
   ryanPic.lockMovementX = true;
   ryanPic.lockMovementY = false;}
 );
-
 var addUserIcon;
-
 var tomText = new fabric.Text("Tom",{  
   left: tomIcon.left,
   top: tomIcon.top,
@@ -2968,7 +2688,6 @@ var tomText = new fabric.Text("Tom",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 var mikeText = new fabric.Text("Mike",{  
   left: mikeIcon.left,
   top: mikeIcon.top,
@@ -2982,7 +2701,6 @@ var mikeText = new fabric.Text("Mike",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 var ryanText = new fabric.Text("Ryan",{  
   left: ryanIcon.left,
   top: ryanIcon.top,
@@ -2996,7 +2714,6 @@ var ryanText = new fabric.Text("Ryan",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 var mattText = new fabric.Text("Matt",{  
   left: mattIcon.left,
   top: mattIcon.top,
@@ -3010,7 +2727,6 @@ var mattText = new fabric.Text("Matt",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 var devinText  = new fabric.Text("Devin",{  
   left: devinIcon.left,
   top: devinIcon.top,
@@ -3024,7 +2740,6 @@ var devinText  = new fabric.Text("Devin",{
   lockMovementX: true,
   lockMovementY: true
 });
-
 function showUsers(visible)
 {
   ryanPic.visible = visible;
@@ -3038,7 +2753,6 @@ function showUsers(visible)
   mattText.visible = visible;
   tomText.visible = visible;
 }
-
 function moveUsers()
 {
   devinPic.top = userPic.top;
@@ -3057,9 +2771,9 @@ function moveUsers()
   mikeText.top = mikePic.top + userPic.height;
   mikeText.left = mikePic.left;
 }
-
 function postCharmMove()
 {
+  updateAppPos();
   userIcon.top = userPic.top;
   userIcon.left = userPic.left;
   emergencyIcon.top = emergencyPic.top;
@@ -3070,21 +2784,15 @@ function postCharmMove()
   appIcon2.left = appPic2.left;
   settingsIcon.top = settingsPic.top;
   settingsIcon.left = settingsPic.left;
-
   userPic.setCoords();
   emergencyPic.setCoords();
   appPic.setCoords();
   appPic2.setCoords();
   settingsPic.setCoords();
-
   debugLog();
-
   canvas.deactivateAll().renderAll().calcOffset();
 }
-
 //----END-USER-ICONS------------------------
-
-
 // add all of the elements to the canvas
 //canvas.add(charmsBar);
 canvas.add(insideDoor);
@@ -3105,36 +2813,28 @@ canvas.add(devinText);
 
 // code adapted from http://jsfiddle.net/tornado1979/39up3jcm/
 // this code deals with scaling all the elements on the canvas
-
 function zoomAll(SCALE_FACTOR) {
-
       var objects = canvas.getObjects();
       for (var i in objects) {
           var scaleX = objects[i].scaleX;
           var scaleY = objects[i].scaleY;
           var left = objects[i].left;
           var top = objects[i].top;
-
           var tempScaleX = scaleX * SCALE_FACTOR;
           var tempScaleY = scaleY * SCALE_FACTOR;
           var tempLeft = left * SCALE_FACTOR;
           var tempTop = top * SCALE_FACTOR;
-
           objects[i].scaleX = tempScaleX;
           objects[i].scaleY = tempScaleY;
           objects[i].left = tempLeft;
           objects[i].top = tempTop;
-
           objects[i].setCoords();
       }
   
       canvas.renderAll();
   }
-
 // draw everything at the appropriate scale for this canvas
 zoomAll(canvas.height / localHeight);
-
-
 </script>
 
 </body>
