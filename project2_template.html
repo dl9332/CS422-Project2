@@ -187,8 +187,8 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
     canvas.remove(settingsPic);
     canvas.add(settingsPic);
-
-      //updateAppPos();
+    updateAppPos();
+    updateCamPos();
 
       canvas.deactivateAll();
     //canvas.renderAll();
@@ -221,8 +221,7 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
   settingsPic.top = appPic.getTop() + quarterDoorHeight;
   canvas.remove(settingsPic);
   canvas.add(settingsPic)
-
-      updateAppPos();
+  updateAppPos();
     //canvas.renderAll();
     //fabric.util.requestAnimFrame(animate);
   });
@@ -282,7 +281,7 @@ function createAppIcon(icon){
                     canvas.add(emergencyPic);
 
                     updateAppPos();
-                    //updateCamPos();
+                    updateCamPos();
 
                     canvas.deactivateAll();
                    // canvas.renderAll();
@@ -379,7 +378,8 @@ var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(i
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
     canvas.remove(emergencyPic);
     canvas.add(emergencyPic);
-      updateAppPos();
+    updateAppPos();
+    updateCamPos();
     //canvas.deactivateAll();
     canvas.renderAll();
     //fabric.util.requestAnimFrame(animate);
@@ -947,6 +947,8 @@ function createNoteApp(){
 
                 groupPic.on('selected',function(){
                     updateNoteApp(false,3);
+                    charmBar[0].active=false;
+                    activeIcon(charmBar[0]);
                     canvas.deactivateAll();
 
                 })
@@ -1018,6 +1020,8 @@ function createNoteApp(){
                 circle1.on('selected',function(){
                     updateNoteApp(false,4);
                     updateNoteApp(false,1);
+                    charmBar[0].active=false;
+                    activeIcon(charmBar[0]);
                     canvas.deactivateAll();
                 })
             }
@@ -1036,6 +1040,8 @@ function createNoteApp(){
                 circle2.on('selected',function(){
                     updateNoteApp(false,4);
                     updateNoteApp(false,1);
+                    charmBar[0].active=false;
+                    activeIcon(charmBar[0]);
                     canvas.deactivateAll();
                 })
             }
@@ -1053,6 +1059,8 @@ function createNoteApp(){
                 circle3.on('selected',function(){
                     updateNoteApp(false,4);
                     updateNoteApp(false,1);
+                    charmBar[0].active=false;
+                    activeIcon(charmBar[0]);
                     canvas.deactivateAll();
                 })
             }
@@ -1532,14 +1540,31 @@ function updateNoteApp(isVisible,menuId){
 
 
 
-/*function updateCamPos(){
-    backPic.top = appPic.top *1.02;
+function updateCamPos(){
+    camMenuPic.top = appPic.top*1.02;
+    canvas.remove(camMenuPic);
+    canvas.add(camMenuPic);
+
+    backPic.top = appPic.top;
+    canvas.remove(backPic);
+    canvas.add(backPic);
+
     peepPic.top = appPic.top;
+    canvas.remove(peepPic);
+    canvas.add(peepPic);
+
     peepPic2.top = appPic.top;
+    canvas.remove(peepPic2);
+    canvas.add(peepPic2);
+
     mirrorPic.top = appPic.top;
+    canvas.remove(mirrorPic);
+    canvas.add(mirrorPic);
+
     mirrorPic2.top = appPic.top;
-    camMenuPic.top = appPic.top;
-}*/
+    canvas.remove(mirrorPic2);
+    canvas.add(mirrorPic2);
+}
 
 function updateApps(isVisible){
 
