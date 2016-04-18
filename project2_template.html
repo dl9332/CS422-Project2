@@ -100,6 +100,7 @@
   apps[4].push({icon:"noteRec",fp:'resources/noteRec',active:false,create:false});
   apps[4].push({icon:"rec",fp:'resources/rec',active:false,create:false});
   apps[4].push({icon:"rec2",fp:'resources/rec2',active:false,create:false});
+  apps[4].push({icon:"defaultNote",fp:'resources/defaultRec',active:false,create:false});
 
 
 
@@ -446,7 +447,7 @@ function createApps(){
 
 }
 
-createApps();
+window.onload=createApps();
 
 
 function createWeatherApp(){
@@ -1081,10 +1082,16 @@ function createNoteApp(){
                 img.set({left: appPic.left*4, top: appPic.top-400, width: charmAppHW*2, height: charmAppHW*2, originX: 'left',
                     originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
                 canvas.add(img).setActiveObject(img);
+
                 recNotePic = canvas.getActiveObject();
+
+                blackBox = new fabric.Rect({left:recNotePic.left+30, top:recNotePic.top+80,width:charmAppHW+150,height:charmAppHW+110,
+                    originX:'left',originY:'top',visible:false,lockMovementX:true,lockMovementY:true});
+                canvas.add(blackBox);
+
                 recNotePic.on('selected',function(){
                     updateNoteApp(false,6);
-                    updateNoteApp(true,3)
+                    updateNoteApp(true,3);
                     canvas.deactivateAll();
 
                 })
@@ -1101,6 +1108,8 @@ function createNoteApp(){
                 recPic.on('selected',function(){
                     recPic2.visible=true;
                     recPic.visible=false;
+                    blackBox.visible=false;
+                    defaultNotePic.visible=true;
                     canvas.deactivateAll();
 
                 })
@@ -1114,8 +1123,10 @@ function createNoteApp(){
                 canvas.add(img).setActiveObject(img);
                 recPic2 = canvas.getActiveObject();
                 recPic2.on('selected',function(){
+                    blackBox.visible=true;
                     recPic.visible=true;
                     recPic2.visible=false;
+                    defaultNotePic.visible=false;
                     canvas.deactivateAll();
 
                 })
@@ -1142,8 +1153,23 @@ function createNoteApp(){
             }
     );
 
+    iconPath = apps[4][15].fp;
+    defaultNote = new fabric.Image.fromURL(iconPath +'.png', function(img) {
+                img.set({left: recNotePic.left+30, top: recNotePic.top+80, width: charmAppHW+150, height: charmAppHW+110, originX: 'left',
+                    originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
+                canvas.add(img).setActiveObject(img);
+
+                defaultNotePic = canvas.getActiveObject();
+                canvas.add(blackBox);
+            }
+    );
+
 
 }
+
+
+
+
 function noteAppText(){
 
     noteHeader = new fabric.Text("New Note", {left:appPic.left+380,top:appPic.top-80,fontFamily: 'Arial',fill:'black', fontSize: 40, fontWeight: 'italic', originX: 'left',
@@ -1221,6 +1247,11 @@ function updateAppPos(){
 }
 function updateCamApp(isVisible,menuId){
 
+    mirrorPic2.bringToFront();
+    mirrorPic.bringToFront();
+    peepPic.bringToFront();
+    peepPic2.bringToFront();
+    backPic.bringToFront();
 
     if(menuId==1){
         if(isVisible==true) {
@@ -1375,6 +1406,12 @@ function updateNoteApp(isVisible,menuId){
             notePadPic.visible = true;
             backPic.visible = true;
             camMenuPic.visible = true;
+
+            noteCamPic.bringToFront();
+            notePadPic.bringToFront();
+            backPic.bringToFront();
+
+
             temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=1;
             apps[4][0].last=temp;
@@ -1398,7 +1435,7 @@ function updateNoteApp(isVisible,menuId){
             message.visible = true;
 
             noteBoxPic.bringToFront();
-            noteBarPic.bringToFront();
+            //noteBarPic.bringToFront();
             postItPic.bringToFront();
             backPic1.bringToFront();
             noteHeader.bringToFront();
@@ -1433,6 +1470,11 @@ function updateNoteApp(isVisible,menuId){
             temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=3;
             apps[4][0].last=temp;
+
+            singlePic.bringToFront();
+            groupPic.bringToFront();
+            backPic.bringToFront();
+
         }
         else{
             singlePic.visible=false;
@@ -1451,6 +1493,14 @@ function updateNoteApp(isVisible,menuId){
             circle3.visible=true;
             leftPic.visible=true;
             rightPic.visible=true;
+
+            circle1.bringToFront();
+            circle2.bringToFront();
+            circle3.bringToFront();
+            leftPic.bringToFront();
+            rightPic.bringToFront();
+
+
             camMenuPic.visible = true;
             camMenuPic.top = appPic.top+300;
             temp =  apps[4][0].appIdx;
@@ -1475,6 +1525,11 @@ function updateNoteApp(isVisible,menuId){
             groupPic.visible=true;
             backPic.visible=true;
             camMenuPic.visible=true;
+
+            singlePic.bringToFront();
+            groupPic.bringToFront();
+            backPic.bringToFront();
+
             temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=3;
             apps[4][0].last=temp;
@@ -1493,7 +1548,16 @@ function updateNoteApp(isVisible,menuId){
             recNotePic.visible=true;
             recPic.visible=true;
             backPic.visible=true;
+
+            blackBox.visible=true;
+
+
+            recPic.bringToFront();
             backPic.bringToFront();
+            recNotePic.bringToFront();
+            blackBox.bringToFront();
+            defaultNotePic.bringToFront();
+
             postItPic2.visible=true;
             temp =  apps[4][0].appIdx;
             apps[4][0].appIdx=6;
@@ -1506,6 +1570,8 @@ function updateNoteApp(isVisible,menuId){
             backPic.visible=false;
             recPic2.visible=false;
             postItPic2.visible=false;
+            blackBox.visible=false;
+            defaultNotePic.visible=false;
         }
     }
 
@@ -1533,6 +1599,8 @@ function updateNoteApp(isVisible,menuId){
             recPic2.visible=false;
             camMenuPic.top = appPic.top*1.02;
             postItPic2.visible=false;
+            blackBox.visible=false;
+            defaultNotePic.visible=false;
         }
 
     }
