@@ -61,9 +61,13 @@
   var URL = 'http://api.openweathermap.org/data/2.5/forecast/city?q=';
   var jsonCity = 'London,uk';
   var apiCode ='&APPID=aa4e2383e2f4acc395aeb12aa81c13ad';
-  var groupMessages = [];
+  var groupMsg = [];
   var apps = [];
   var appIdx =0;
+  var messageBody=({active:false,icon:null,msg:'',header:''});
+  var videoBody = ({active:false,icon1:null,icon2:null,icon3:null,icon4:null,icon5:null,icon6:null,
+    videobody:null,pausePic:null,playPic:null,closePic:null,videoBar:null,videoStrem:null})
+
   for(i=0;i<6;i++){
       apps.push([]);
   }
@@ -71,7 +75,7 @@ apps[0].push({icon:"weather",fp:'resources/weather',active:false,create:false,ap
 apps[1].push({icon:"clock",fp:'resources/clock',active:false,create:false});
 apps[2].push({icon:"calender",fp:'resources/calender',active:false,create:false});
 apps[3].push({icon:"doorCam",fp:'resources/doorCam',active:false,create:false});
-apps[4].push({icon:"notes",fp:'resources/notes',active:false,create:false,appIdx:0,last:0});
+apps[4].push({icon:"notes",fp:'resources/notes',active:false,create:false,appIdx:0,last:0,isANote:false});
 apps[5].push({icon:"home",fp:'resources/home',active:false,create:false});
 
 apps[0].push({icon:"weatMenu",fp:'resources/weatMenu',active:false,create:false});
@@ -929,6 +933,7 @@ function createNoteApp(){
             noteCamPic = canvas.getActiveObject();
 
             noteCamPic.on('selected',function(){
+
               updateNoteApp(false,0);
               updateNoteApp(true,6);
               canvas.deactivateAll();
@@ -948,6 +953,7 @@ function createNoteApp(){
             notePadPic = canvas.getActiveObject();
 
             notePadPic.on('selected',function(){
+              apps[4][0].isANote=true;
               updateNoteApp(true,2);
               canvas.deactivateAll();
             })
@@ -1033,7 +1039,20 @@ function createNoteApp(){
 
             groupPic.on('selected',function(){
               updateNoteApp(false,3);
-              createMessage();
+              if(apps[4][0].isANote==true) {
+                if (messageBody.active == true) {
+                  canvas.remove(msgHead);
+                  canvas.remove(msgBody);
+                  canvas.remove(closePic);
+                  canvas.remove(messageBodyPic);
+                }
+                groupMsg.push({header: noteHeader.text, msg: message.text});
+                apps[4][0].isANote=false;
+                createMessage();
+              }
+              else {
+                createVideoMessage();
+              }
               canvas.deactivateAll();
 
             })
@@ -1245,9 +1264,19 @@ function createNoteApp(){
 }
 
 function noteAppText(){
-    noteHeader = new fabric.Text("New Note", {left:appPic.left+380,top:appPic.top-80,fontFamily: 'Arial',fill:'black', fontSize: 40, fontWeight: 'italic', originX: 'left',
-        originY: 'top',visible:false,selectable:false,evented:false,lockMovementX:true, lockMovementY:true});
+
+    noteHeader = new fabric.IText("Add Note",{left:appPic.left+380,top:appPic.top-80, width:5,fontFamily: 'Arial',fill:'black', fontSize:40, fontWeight: 'italic', originX: 'left',
+      originY: 'top',visible:false,lineHeight:1,lockMovementX:true,lockMovementY:true,hasControls:false});
     canvas.add(noteHeader);
+    noteHeader.entered=false;
+    noteHeader.on('editing:entered',function(){
+      if(message.entered==false) {
+        message.text ="   ";
+        message.entered=true;
+      }
+    })
+
+
     message = new fabric.IText("Add Note",{left:appPic.left+380,top:appPic.top-30, width:5,fontFamily: 'Arial',fill:'black', fontSize: 34, fontWeight: 'italic', originX: 'left',
         originY: 'top',visible:false,lineHeight:1,lockMovementX:true,lockMovementY:true,hasControls:false});
     canvas.add(message);
@@ -1609,7 +1638,9 @@ function updateNoteApp(isVisible,menuId){
       postItPic.visible = true;
       backPic1.visible = true;
       noteHeader.visible = true;
+      noteHeader.text="New Note"
       message.visible = true;
+      message.text="Add Note"
 
       noteBoxPic.bringToFront();
       //noteBarPic.bringToFront();
@@ -1808,13 +1839,156 @@ function closeApp(name){
 }
 
 function createMessage(){
-  messageBody = noteBoxPic.clone(function(c){
-    canvas.add(c.set({left:appPic.left,top:appPic.top}));
+  console.log("here");
+  messageBody.icon = noteBoxPic.clone(function(c){
+    canvas.add(c.set({left:appPic.left,top:appPic.top,visible:true})).setActiveObject(c);
+    messageBodyPic = canvas.getActiveObject();
+
+    closeIcon = new fabric.Image.fromURL('resources/close.png', function(img) {
+              img.set({left:messageBodyPic.left+400, top:messageBodyPic.top, width: charmAppHW-100,height: charmAppHW-100,
+                originX: 'left', originY: 'top', visible:true,lockMovementX:true,lockMovementY:true
+              });
+              canvas.add(img).setActiveObject(img);
+              closePic = canvas.getActiveObject();
+              closePic.on('selected',function(){
+                canvas.remove(msgHead);
+                canvas.remove(msgBody);
+                canvas.remove(closePic);
+                canvas.remove(messageBodyPic);
+
+
+                if(groupMsg.length>1) {
+                  groupMsg.pop();
+                  createMessage();
+                }
+
+                canvas.deactivateAll();
+              })
+            }
+    );
+
+   msgHead = new fabric.Text(groupMsg[groupMsg.length-1].header, {left:messageBodyPic.left+50,top:messageBodyPic.top+30,fontFamily: 'Arial',fill:'black', fontSize: 40, fontWeight: 'italic', originX: 'left',
+      originY: 'top',visible:true,selectable:false,evented:false,lockMovementX:false, lockMovementY:false});
+    canvas.add(msgHead);
+
+    msgBody = new fabric.Text(groupMsg[groupMsg.length-1].msg, {left:messageBodyPic.left+50,top:messageBodyPic.top+80,fontFamily: 'Arial',fill:'black', fontSize: 34, fontWeight: 'italic', originX: 'left',
+      originY: 'top',visible:true,selectable:false,evented:false,lockMovementX:false, lockMovementY:false});
+    canvas.add(msgBody);
+
+
+    messageBodyPic.on('moving',function(){
+      closePic.top = messageBodyPic.top;
+      closePic.left = messageBodyPic.left+400;
+      closeIcon.top = closePic.top;
+      closeIcon.left = closePic.left;
+      closePic.setCoords();
+
+      msgHead.top = messageBodyPic.top+30;
+      msgHead.left = messageBodyPic.left+50;
+
+      msgBody.top = messageBodyPic.top+80;
+      msgBody.left = messageBodyPic.left+50;
+      canvas.deactivateAll();
+    });
+    messageBody.active=true;
   })
 
 }
 
 
+function createVideoMessage(){
+  console.log("here");
+  videoBody.icon1 = recNotePic.clone(function(c){
+    canvas.add(c.set({left:appPic.left,top:appPic.top,visible:true})).setActiveObject(c);
+    videoBody.videobody = canvas.getActiveObject();
+
+    videoBody.icon5 = recBarPic.clone(function(c){
+      canvas.add(c.set({left:videoBody.videobody.left,top:videoBody.videobody.top+500,visible:true,
+        lockMovementX:true,lockMovementY:true})).setActiveObject(c);
+      videoBody.videoBar= canvas.getActiveObject();
+              videoBody.icon4 = new fabric.Image.fromURL('resources/close.png', function(img) {
+                        img.set({left:videoBody.videobody.left+250, top:videoBody.videobody.top+470, width: charmAppHW-50,
+                          height:charmAppHW-50, originX: 'left', originY: 'top', visible:true,lockMovementX:true,lockMovementY:true
+                        });
+                        canvas.add(img).setActiveObject(img);
+                        videoBody.closePic = canvas.getActiveObject();
+                        videoBody.closePic.on('selected',function(){
+                          canvas.remove(videoBody.playPic);
+                          canvas.remove(videoBody.pausePic);
+                          canvas.remove(videoBody.videoBar);
+                          canvas.remove(videoBody.closePic);
+                          canvas.remove(videoBody.videobody);
+                          canvas.deactivateAll();
+                        })
+                      }
+              );
+
+
+              videoBody.icon3 = new fabric.Image.fromURL('resources/play.png', function(img) {
+                        img.set({left:videoBody.videobody.left, top:videoBody.videobody.top+470, width: charmAppHW-50,
+                          height:charmAppHW-50, originX: 'left', originY: 'top', visible:true,lockMovementX:true,lockMovementY:true
+                        });
+                        canvas.add(img).setActiveObject(img);
+                        videoBody.playPic = canvas.getActiveObject();
+                        videoBody.playPic.on('selected',function(){
+                          console.log("here1");
+                          videoBody.playPic.visible=false;
+                          videoBody.pausePic.visible=true;
+                          canvas.deactivateAll();
+                        })
+                      }
+              );
+
+
+              videoBody.icon2 = new fabric.Image.fromURL('resources/pause.png', function(img) {
+                        img.set({left:videoBody.videobody.left, top:videoBody.videobody.top+470, width: charmAppHW-50,
+                          height:charmAppHW-50, originX: 'left', originY: 'top', visible:false,lockMovementX:true,lockMovementY:true
+                        });
+                        canvas.add(img).setActiveObject(img);
+                        videoBody.pausePic = canvas.getActiveObject();
+                        videoBody.pausePic.on('selected',function(){
+                          videoBody.pausePic.visible=false;
+                          videoBody.playPic.visible = true;
+                          canvas.deactivateAll();
+                        })
+                      }
+              );
+            }
+    );
+
+    videoBody.videobody.on('moving',function(){
+      videoBody.videoBar.top  = videoBody.videobody.top+500;
+      videoBody.videoBar.left = videoBody.videobody.left;
+      /*videoBody.icon5.top     =  videoBody.videoBar.top;
+      videoBody.icon5.left    = videoBody.videoBar.left;*/
+      videoBody.videoBar.setCoords();
+      videoBody.closePic.top = videoBody.videobody.top+470;
+      videoBody.closePic.left = videoBody.videobody.left+250;
+      videoBody.icon4.top =  videoBody.closePic.top;
+      videoBody.icon4.left = videoBody.closePic.left;
+      videoBody.closePic.setCoords();
+
+      videoBody.playPic.top = videoBody.videobody.top+470;
+      videoBody.playPic.left = videoBody.videobody.left;
+      videoBody.icon3.top = videoBody.playPic.top;
+      videoBody.icon3.left = videoBody.playPic.left;
+      videoBody.playPic.setCoords();
+
+      videoBody.pausePic.top = videoBody.videobody.top+470;
+      videoBody.pausePic.left = videoBody.videobody.left;
+      videoBody.icon2.top = videoBody.pausePic.top;
+      videoBody.icon2.left = videoBody.pausePic.left;
+      videoBody.pausePic.setCoords();
+
+
+      canvas.deactivateAll();
+    });
+    messageBody.active=true;
+  })
+
+
+
+}
 
 
 
