@@ -49,7 +49,7 @@
   var doorKnobRadius = 75;
   var insideKnobStartX = topLeftInsideDoor + doorWidth - doorKnobRadius - charmOffsetX;
   var outsideKnobStartX = topLeftOutsideDoor + doorKnobRadius + charmOffsetX;
-  var userPic, emergencyPic, appPic, settingsPic, weatherPic, devinPic, tomPic, mikePic, mattPic;
+  var userPic, emergencyPic, appPic, settingsPic, weatherPic, devinPic, tomPic, mikePic, mattPic, devinText;
 
   var canvas = this.__canvas = new fabric.Canvas('c');
   var military = false;
@@ -463,11 +463,20 @@ var devinIcon = new fabric.Image.fromURL('resources/duck.png', function(img) {
     originY: 'top',
     visible: true
   });
+  img.on('added', function ()
+  {
+    devinText.top = img.top + img.height;
+    devinText.left = img.left;
+    canvas.renderAll();
+  });
   canvas.add(img).setActiveObject(img);
   devinPic = canvas.getActiveObject();
   devinPic.on('moving', function animate(){
     canvas.deactivateAll().renderAll();
   });
+
+
+
   devinPic.lockMovementX = true;
   devinPic.lockMovementY = false;}
 );
@@ -482,6 +491,12 @@ var tomIcon = new fabric.Image.fromURL('resources/pig.png', function(img) {
     originX: 'left',
     originY: 'top',
     visible: true
+  });
+  img.on('added', function ()
+  {
+    tomText.top = img.top + img.height;
+    tomText.left = img.left;
+    canvas.renderAll();
   });
   canvas.add(img).setActiveObject(img);
   tomPic = canvas.getActiveObject();
@@ -502,6 +517,12 @@ var mattIcon = new fabric.Image.fromURL('resources/lamb.png', function(img) {
     originY: 'top',
     visible: true
   });
+  img.on('added', function ()
+  {
+    mattText.top = img.top + img.height;
+    mattText.left = img.left;
+    canvas.renderAll();
+  });
   canvas.add(img).setActiveObject(img);
   mattPic = canvas.getActiveObject();
   mattPic.on('moving', function animate(){
@@ -520,6 +541,12 @@ var mikeIcon = new fabric.Image.fromURL('resources/dog.png', function(img) {
     originX: 'left',
     originY: 'top',
     visible: true
+  });
+  img.on('added', function ()
+  {
+    mikeText.top = img.top + img.height;
+    mikeText.left = img.left;
+    canvas.renderAll();
   });
   canvas.add(img).setActiveObject(img);
   mikePic = canvas.getActiveObject();
@@ -540,6 +567,12 @@ var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
     originY: 'top',
     visible: true
   });
+  img.on('added', function ()
+  {
+    ryanText.top = img.top + img.height;
+    ryanText.left = img.left;
+    canvas.renderAll();
+  });
   canvas.add(img).setActiveObject(img);
   ryanPic = canvas.getActiveObject();
   ryanPic.on('moving', function animate(){
@@ -549,6 +582,78 @@ var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
   ryanPic.lockMovementY = false;}
 );
 
+var addUserIcon;
+
+var tomText = new fabric.Text("Tom",{  
+  left: tomIcon.left,
+  top: tomIcon.top,
+  originX: 'left',
+  originY: 'top',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 50,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+var mikeText = new fabric.Text("Mike",{  
+  left: mikeIcon.left,
+  top: mikeIcon.top,
+  originX: 'left',
+  originY: 'top',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 50,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+var ryanText = new fabric.Text("Ryan",{  
+  left: ryanIcon.left,
+  top: ryanIcon.top,
+  originX: 'left',
+  originY: 'top',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 50,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+var mattText = new fabric.Text("Matt",{  
+  left: mattIcon.left,
+  top: mattIcon.top,
+  originX: 'left',
+  originY: 'top',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 50,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+var devinText  = new fabric.Text("Devin",{  
+  left: devinIcon.left,
+  top: devinIcon.top,
+  originX: 'left',
+  originY: 'top',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 50,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
 function showUsers(visible)
 {
   ryanPic.visible = visible;
@@ -556,6 +661,11 @@ function showUsers(visible)
   devinPic.visible = visible;
   mattPic.visible = visible;
   tomPic.visible = visible;
+  ryanText.visible = visible;
+  mikeText.visible = visible;
+  devinText.visible = visible;
+  mattText.visible = visible;
+  tomText.visible = visible;
 }
 
 function moveUsers()
@@ -565,6 +675,16 @@ function moveUsers()
   tomPic.top = userPic.top;
   ryanPic.top = userPic.top + userPic.height + userOffsetY;
   mikePic.top = userPic.top + userPic.height + userOffsetY;
+  devinText.top = devinPic.top + userPic.height;
+  devinText.left = devinPic.left;
+  mattText.top = mattPic.top + userPic.height;
+  mattText.left = mattPic.left;
+  ryanText.top = ryanPic.top + userPic.height;
+  ryanText.left = ryanPic.left;
+  tomText.top = tomPic.top + userPic.height;
+  tomText.left = tomPic.left;
+  mikeText.top = mikePic.top + userPic.height;
+  mikeText.left = mikePic.left;
 }
 
 function postCharmMove()
@@ -602,6 +722,11 @@ canvas.add(date);
 canvas.add(amPm);
 canvas.add(degrees);
 canvas.add(debug);
+canvas.add(mikeText);
+canvas.add(mattText);
+canvas.add(tomText);
+canvas.add(ryanText);
+canvas.add(devinText);
 
 
 // code adapted from http://jsfiddle.net/tornado1979/39up3jcm/
