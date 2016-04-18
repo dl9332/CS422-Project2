@@ -914,9 +914,21 @@ function createDoorCamApp(){
                 }
 
               }
-              canvas.deactivateAll();})
+            canvas.deactivateAll();})
             backPic.lockMovementX = true;
             backPic.lockMovementY = true;}
+  );
+
+  outsideBG = new fabric.Image.fromURL('resources/outside.png', function(img) {
+            img.set({
+              left:topLeftInsideDoor, top:0, width:doorWidth, height:localHeight, originX: 'left',
+              originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
+            });
+            canvas.add(img).setActiveObject(img);
+            outSideBGPic = canvas.getActiveObject();
+            outSideBGPic.sendToBack();
+            outSideBGPic.bringForward();
+          }
   );
 }
 function createNoteApp(){
@@ -1492,11 +1504,13 @@ function updateCamApp(isVisible,menuId){
       peepPic.visible = false;
       mirrorPic2.visible = false;
       mirrorPic.visible = true;
+      outSideBGPic.visible = true;
     }
     else {
       apps[3][2].active = false;
       peepPic2.visible = false;
       peepPic.visible = true;
+      outSideBGPic.visible=false;
     }
   }
   else if(menuId==3){
@@ -1818,6 +1832,13 @@ function closeApp(name){
     else if(name=="notes")
         updateNoteApp(false,0)
 }
+
+
+
+
+
+
+
 //---------------------------Ryan's Code End
 
 
