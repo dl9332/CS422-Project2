@@ -598,7 +598,6 @@ function moveCharms()
  }
 function createApps(){
     createWeather(apps[0][0]);
-    createClock(apps[1][0]);
     createCalender(apps[2][0]);
     createDoorCam(apps[3][0]);
     createNotes(apps[4][0]);
@@ -778,24 +777,12 @@ function createWeather(icon) {
             weatPic.lockMovementY = true;}
   );
 }
-function createClock(icon) {
-    iconPath = icon.fp;
-    clockIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-                img.set({
-                    left: appPic.left *5,top: appPic.top - 200, width: charmAppHW, height: charmAppHW, originX: 'left',
-                    originY: 'top', visible: false
-                });
-                canvas.add(img).setActiveObject(img);
-                clockPic = canvas.getActiveObject();
-                clockPic.lockMovementX = false;
-                clockPic.lockMovementY = false;}
-    );
-}
+
 function createCalender(icon) {
     iconPath = icon.fp;
     calenderIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
                 img.set({
-                    left: appPic.left *7,top: appPic.top - 200, width: charmAppHW, height: charmAppHW, originX: 'left',
+                    left: appPic.left *5,top: appPic.top - 200, width: charmAppHW, height: charmAppHW, originX: 'left',
                     originY: 'top', visible: false
                 });
                 canvas.add(img).setActiveObject(img);
@@ -1300,7 +1287,7 @@ function createNotes(icon) {
 function createHome(icon) {
     iconPath = icon.fp;
     homeIcon = new fabric.Image.fromURL(iconPath +'.png', function(img) {
-                img.set({left: appPic.left *7, top: appPic.top * 1, width: charmAppHW, height: charmAppHW, originX: 'left',
+                img.set({left: appPic.left *7, top: appPic.top -200, width: charmAppHW, height: charmAppHW, originX: 'left',
                     originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
                 canvas.add(img).setActiveObject(img);
                 homePic = canvas.getActiveObject();
@@ -1317,9 +1304,6 @@ function updateAppPos(){
     weatPic.top = appPic.top - 200;
     canvas.remove(weatPic);
     canvas.add(weatPic);
-    clockPic.top = appPic.top - 200;
-    canvas.remove(clockPic);
-    canvas.add(clockPic);
     calenderPic.top = appPic.top - 200;
     canvas.remove(calenderPic);
     canvas.add(calenderPic);
@@ -1803,7 +1787,6 @@ function updateApps(isVisible){
     if(isVisible==true) {
         weatPic.visible = true;
         calenderPic.visible = true;
-        clockPic.visible = true;
         doorCamPic.visible = true;
         notesPic.visible = true;
         homePic.visible = true;
@@ -1811,7 +1794,6 @@ function updateApps(isVisible){
     else {
         weatPic.visible = false;
         calenderPic.visible = false;
-        clockPic.visible = false;
         doorCamPic.visible = false;
         notesPic.visible = false;
         homePic.visible = false;
@@ -2770,7 +2752,6 @@ fullMonthPic.visible = false;
 //function to hide main app page apps
 function hideApps(){
     weatPic.visible = false;
-     clockPic.visible = false;
       calenderPic.visible = false;
        doorCamPic.visible = false;
         notesPic.visible = false;
@@ -2781,7 +2762,6 @@ function hideApps(){
 //Function to show main app page apps
 function showApps(){
     weatPic.visible = true;
-     clockPic.visible = true;
       calenderPic.visible = true;
        doorCamPic.visible = true;
         notesPic.visible = true;
