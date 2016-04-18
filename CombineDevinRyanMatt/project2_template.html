@@ -109,10 +109,10 @@ apps[4].push({icon:"rec",fp:'resources/rec',active:false,create:false});
 apps[4].push({icon:"rec2",fp:'resources/rec2',active:false,create:false});
 apps[4].push({icon:"defaultNote",fp:'resources/defaultRec',active:false,create:false});
 
-weather.push({icon:null,pic:null,fp:'resources/thunderStorm',code:200});
-weather.push({icon:null,pic:null,fp:'resources/rain',code:500});
-weather.push({icon:null,pic:null,fp:'resources/clear',code:800});
-weather.push({icon:null,pic:null,fp:'resources/cloudy',code:801});
+weather.push({icon:null,pic:null,fp:'resources/thunderStorm.png',code:200});
+weather.push({icon:null,pic:null,fp:'resources/rain.png',code:500});
+weather.push({icon:null,pic:null,fp:'resources/clear.png',code:800});
+weather.push({icon:null,pic:null,fp:'resources/cloudy.png',code:801});
 
 
 //---------------End of Ryan's Variable declartions
@@ -701,10 +701,9 @@ function createWeatherApp(){
             backPic0.lockMovementX = true;
             backPic0.lockMovementY = true;}
   );
-  jsonCity=city.trim();
-  json_obj = JSON.parse(get(URL+jsonCity+apiCode));
-  clouds= new fabric.Image.fromURL('resources/clouds.png', function(img) {
-            img.set({left: appPic.left *6.5, top: appPic.top-100, width: charmAppHW-100, height: charmAppHW-100, originX: 'left',
+
+  clouds= new fabric.Image.fromURL('resources/rain.png', function(img) {
+            img.set({left: appPic.left *6.8, top: appPic.top-80, width: charmAppHW-120, height: charmAppHW-120, originX: 'left',
               originY: 'top', visible: false, lockMovementX: true, lockMovementY:true});
             canvas.add(img).setActiveObject(img);
             cloudsPic = canvas.getActiveObject();}
@@ -779,6 +778,8 @@ function createWeather(icon) {
             weatPic = canvas.getActiveObject();
            weatPic.on('selected',function(){
               updateApps(false);
+             jsonCity=city.text.trim();
+             json_obj = JSON.parse(get(URL+jsonCity+apiCode));
               updateWeatApp(true,1);
               apps[0][0].active = true;
               appIdx = 0;
@@ -1548,6 +1549,31 @@ function updateCamApp(isVisible,menuId){
 
   }
 }
+function updatePic(pic,src)
+{fabric.util.loadImage(src, function(img) {
+    pic.setElement(img);
+    pic.width = charmAppHW-120;
+    pic.height = charmAppHW-120;
+    canvas.renderAll();
+  });
+}
+function weatherCode(code){
+  var path;
+  if(code>=200||code<300){
+    path = weather[0].fp;
+  }
+  else if(code>=300||code<600){
+    path = weather[1].fp;
+  }
+  else if(code==800){
+    path = weather[2].fp;
+  }
+  else if(code>800){
+    path = weather[3].fp;
+  }
+  return path;
+}
+
 function updateWeatApp(isVisible,menuId){
 
 
@@ -1568,6 +1594,9 @@ function updateWeatApp(isVisible,menuId){
       degree.visible=true;
       tempScale.visible=true;
       cloudsPic.visible=true;
+      var code = json_obj.cod;
+      fp = weatherCode(code);
+      updatePic(cloudsPic,fp);
       searchText.visible=false;
       textBox.visible=false;
       searchText.entered=false;
