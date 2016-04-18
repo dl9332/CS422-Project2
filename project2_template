@@ -7,7 +7,8 @@
     <title>Project 2 - Group 25</title>
   
   <!-- Get version 1.5.0 of Fabric.js from CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js" ></script>
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js" ></script>-->
+  <script type="text/javascript" src="offlineFabric.js"></script>
 
 
 </head>
@@ -37,7 +38,7 @@
   var localWidth = 2714;
   var doorWidth = 1235;
   var topLeftInsideDoor = .2 * (localWidth-(2*doorWidth));
-  var topLeftOutisdeDoor = localWidth - topLeftInsideDoor - doorWidth;
+  var topLeftOutsideDoor = localWidth - topLeftInsideDoor - doorWidth;
   var charmAppHW = doorWidth / 6;
   var quarterDoorHeight = localHeight / 4;
   var charmOffsetY = (localHeight - (localHeight * .75) - charmAppHW) / 2;
@@ -47,17 +48,50 @@
   var doorKnobStartY = .47 * localHeight;
   var doorKnobRadius = 75;
   var insideKnobStartX = topLeftInsideDoor + doorWidth - doorKnobRadius - charmOffsetX;
-  var outsideKnobStartX = topLeftOutisdeDoor + doorKnobRadius + charmOffsetX;
+  var outsideKnobStartX = topLeftOutsideDoor + doorKnobRadius + charmOffsetX;
   var userPic, emergencyPic, appPic, settingsPic, weatherPic, devinPic, tomPic, mikePic, mattPic;
 
   var canvas = this.__canvas = new fabric.Canvas('c');
   var military = false;
-  var celsius = true;
+  var celsius = false
+;
+
+  var userSelect = false;
 
   // set background to blue to make it easier to see it
   canvas.backgroundColor = "#DDDDDD";  // light grey
 
 // need 36 wide instead of 40 as now
+
+//-------------DEBUG------------------------------
+var debug = new fabric.Text("DEBUG",{  
+  left: topLeftOutsideDoor,
+  top: 0,
+  originX: 'left',
+  originY: 'top',
+  fontWeight: 'bold',
+  shadow: "rgba(0,0,0,0.2) 0px 0px 10px",
+  visible: true,
+  fontFamily: 'droid serif',
+  fontSize: 50,
+  lockMovementX: true,
+  lockMovementY: true
+});
+
+function debugLog()
+{
+  var log = "UserIcon:" + userIcon.top + "\n" +
+            "UserPic:" + userPic.top + "\n" +
+            "AppIcon:" + appIcon.top + "\n" +
+            "AppPic:" + appPic.top + "\n" +
+            "EmergencyIcon:" + emergencyIcon.top + "\n" +
+            "EmergnecyPic:" + emergencyPic.top + "\n" +
+            "SettingsIcon:" + settingsIcon.top + "\n" +
+            "SettingsPic:" + settingsPic.top + "\n";
+  debug.setText(log);
+}
+//---------END-DEBUG------------------------------
+
 
 
 //--------Date-and-Time ---------------------------
@@ -152,7 +186,7 @@ insideDoor.lockMovementX = insideDoor.lockMovementY = true;
 
 
 var outsideDoor = new fabric.Rect({
-  left: topLeftOutisdeDoor,
+  left: topLeftOutsideDoor,
   top: 0,
   fill: 'white',
   stroke: 'black',
@@ -243,20 +277,32 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
   });
   canvas.add(img).setActiveObject(img);
   userPic = canvas.getActiveObject();
+
   userPic.on('moving', function animate(){
     emergencyPic.top = userPic.getTop() + quarterDoorHeight;
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
-    canvas.deactivateAll().renderAll();
+    moveUsers();
+    debugLog();
+    canvas.renderAll();
   });
+
   userPic.on('selected', function (){
-    showUsers(true);
+    if(userSelect){
+      showUsers(true);
+    }else{
+      showUsers(false);
+    }
+    moveUsers();
+    userSelect = !userSelect;
+    postCharmMove();
+    canvas.deactivateAll();
   });
+
   userPic.on('modified', function (){
-    userIcon.top = userPic.top;
-    userIcon.left = userPic.left;
-    showUsers(false);
+    postCharmMove();
   });
+
   userPic.lockMovementX = true;
   userPic.lockMovementY = false;}
 );
@@ -274,13 +320,24 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
   });
   canvas.add(img).setActiveObject(img);
   emergencyPic = canvas.getActiveObject();
+
+  emergencyPic.on('selected', function (){
+    canvas.deactivateAll();
+  });
+
   emergencyPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
-
-    canvas.deactivateAll().renderAll();
+    moveUsers();
+    debugLog();
+    canvas.renderAll();
   });
+
+  emergencyPic.on('modified', function (){
+    postCharmMove();
+  });
+
   emergencyPic.lockMovementX = true; 
   emergencyPic.lockMovementY = false;}
 );
@@ -298,13 +355,24 @@ var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   });
   canvas.add(img).setActiveObject(img);
   appPic = canvas.getActiveObject();
+
+  appPic.on('selected', function (){
+    canvas.deactivateAll();
+  });
+
   appPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
-
-    canvas.deactivateAll().renderAll();
+    moveUsers();
+    debugLog();
+    canvas.renderAll();
   });
+
+  appPic.on('modified', function (){
+    postCharmMove();
+  });
+
   appPic.lockMovementX = true;
   appPic.lockMovementY = false;}
 );
@@ -322,13 +390,24 @@ var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(i
   });
   canvas.add(img).setActiveObject(img);
   settingsPic = canvas.getActiveObject();
+
+  settingsPic.on('selected', function (){
+    canvas.deactivateAll();
+  });
+
   settingsPic.on('moving', function animate(){
     userPic.top = emergencyPic.getTop() - quarterDoorHeight;
     appPic.top = settingsPic.getTop() - quarterDoorHeight;
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
-
-    canvas.deactivateAll().renderAll();
+    moveUsers();
+    debugLog();
+    canvas.renderAll();
   });
+
+  settingsPic.on('modified', function (){
+    postCharmMove();
+  });
+
   settingsPic.lockMovementX = true;
   settingsPic.lockMovementY = false;}
 );
@@ -479,6 +558,36 @@ function showUsers(visible)
   tomPic.visible = visible;
 }
 
+function moveUsers()
+{
+  devinPic.top = userPic.top;
+  mattPic.top = userPic.top;
+  tomPic.top = userPic.top;
+  ryanPic.top = userPic.top + userPic.height + userOffsetY;
+  mikePic.top = userPic.top + userPic.height + userOffsetY;
+}
+
+function postCharmMove()
+{
+  userIcon.top = userPic.top;
+  userIcon.left = userPic.left;
+  emergencyIcon.top = emergencyPic.top;
+  emergencyIcon.left = emergencyPic.left;
+  appIcon.top = appPic.top;
+  appIcon.left = appPic.left;
+  settingsIcon.top = settingsPic.top;
+  settingsIcon.left = settingsPic.left;
+
+  userPic.setCoords();
+  emergencyPic.setCoords();
+  appPic.setCoords();
+  settingsPic.setCoords();
+
+  debugLog();
+
+  canvas.deactivateAll().renderAll().calcOffset();
+}
+
 //----END-USER-ICONS------------------------
 
 
@@ -492,6 +601,7 @@ canvas.add(clock);
 canvas.add(date);
 canvas.add(amPm);
 canvas.add(degrees);
+canvas.add(debug);
 
 
 // code adapted from http://jsfiddle.net/tornado1979/39up3jcm/
