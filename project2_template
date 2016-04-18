@@ -57,6 +57,8 @@
   var military = false;
   var celsius = false;
   var userSelect = true;
+  var addUserSelect = true;
+  var userAdded = false;
 
   var URL = 'http://api.openweathermap.org/data/2.5/forecast/city?q=';
   var jsonCity = 'London,uk';
@@ -143,7 +145,8 @@ function debugLog()
             "EmergencyIcon:" + emergencyIcon.top + "\n" +
             "EmergnecyPic:" + emergencyPic.top + "\n" +
             "SettingsIcon:" + settingsIcon.top + "\n" +
-            "SettingsPic:" + settingsPic.top + "\n";
+            "SettingsPic:" + (getUser('Devin').notes[0] != null ? getUser('Devin').notes[0] : null ) + "\n" +
+            "AddUserSelect:" + (addUserSelect ? "true" : "false") + "\n";
   debug.setText(log);
 }
 //---------END-DEBUG------------------------------
@@ -357,13 +360,19 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
 
   userPic.on('selected', function (){
     if(userSelect){
+      addUserPic.top = userPic.top + userPic.height + userOffsetY;
+      addUserPic.left = userPic.left + (3 * (userPic.width + userOffsetX));
+      changePic(addUserPic,'resources/addUser.png');
+      addUserSelect = true;
       showUsers(true);
+      showNewUsers(false);
       changePic(userPic,'resources/single2.png');
     }else{
+      addUserSelect = false;
+      showNewUsers(false);
       showUsers(false);
       changePic(userPic,'resources/single.png');
     }
-    moveUsers();
     userSelect = !userSelect;
     postCharmMove();
     canvas.deactivateAll();
@@ -546,6 +555,17 @@ function moveCharms()
 //--------------------END-CHARMS-BAR-------------------------------
 
 //----USER-ICONS----------------------------
+class User 
+{
+  constructor(name,icon)
+  {
+    this.name = name;
+    this.icon = icon;
+    this.notes = [];
+  }
+}
+
+var users = [];
 
 var devinIcon = new fabric.Image.fromURL('resources/duck.png', function(img) {
   img.set({
@@ -569,12 +589,10 @@ var devinIcon = new fabric.Image.fromURL('resources/duck.png', function(img) {
     canvas.deactivateAll().renderAll();
   });
 
-
-
   devinPic.lockMovementX = true;
   devinPic.lockMovementY = false;}
 );
-
+users.push(new User('Devin',devinIcon));
 
 var tomIcon = new fabric.Image.fromURL('resources/pig.png', function(img) {
   img.set({
@@ -600,6 +618,7 @@ var tomIcon = new fabric.Image.fromURL('resources/pig.png', function(img) {
   userPic.lockMovementX = true;
   userPic.lockMovementY = false;}
 );
+users.push(new User('Tom',tomIcon));
 
 var mattIcon = new fabric.Image.fromURL('resources/lamb.png', function(img) {
   img.set({
@@ -625,6 +644,7 @@ var mattIcon = new fabric.Image.fromURL('resources/lamb.png', function(img) {
   mattPic.lockMovementX = true;
   mattPic.lockMovementY = false;}
 );
+users.push(new User('Matt',mattIcon));
 
 var mikeIcon = new fabric.Image.fromURL('resources/dog.png', function(img) {
   img.set({
@@ -650,6 +670,7 @@ var mikeIcon = new fabric.Image.fromURL('resources/dog.png', function(img) {
   mikePic.lockMovementX = true;
   mikePic.lockMovementY = false;}
 );
+users.push(new User('Mike',mikeIcon));
 
 var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
   img.set({
@@ -675,6 +696,26 @@ var ryanIcon = new fabric.Image.fromURL('resources/eagle.png', function(img) {
   ryanPic.lockMovementX = true;
   ryanPic.lockMovementY = false;}
 );
+users.push(new User('Ryan',ryanIcon));
+
+var gregIcon = new fabric.Image.fromURL('resources/bunny.png', function(img){
+  img.set({
+    left: userPic.left + (3 * (userPic.width + userOffsetX)),
+    top: userPic.top + userPic.height + userOffsetY,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: false
+  });
+  canvas.add(img).setActiveObject(img);
+  gregPic = canvas.getActiveObject();
+
+  gregPic.lockMovementX = true;
+  gregPic.lockMovementY = false;
+});
+
+users.push(new User('Greg',gregIcon));
 
 var addUserIcon = new fabric.Image.fromURL('resources/addUser.png', function(img) {
   img.set({
@@ -692,9 +733,25 @@ var addUserIcon = new fabric.Image.fromURL('resources/addUser.png', function(img
   });
   canvas.add(img).setActiveObject(img);
   addUserPic = canvas.getActiveObject();
+
   addUserPic.on('moving', function animate(){
     canvas.deactivateAll().renderAll();
   });
+
+  addUserPic.on('selected', function (){
+    if(addUserSelect){
+      changePic(addUserPic,'resources/addUser2.png')
+      addUserPic.top = userPic.top - userPic.height;
+      addUserPic.left = userPic.left + (2 * (userPic.width + userOffsetX));
+      showUsers(false);
+      showNewUsers(true);
+    }else{
+      changePic(addUserPic,'resources/addUser.png')
+    }
+    addUserSelect = !addUserSelect;
+    canvas.deactivateAll();
+  });
+
   addUserPic.lockMovementX = true;
   addUserPic.lockMovementY = false;}
 );
@@ -769,6 +826,43 @@ var devinText  = new fabric.Text("Devin",{
   lockMovementY: true
 });
 
+var bunnyIcon = new fabric.Image.fromURL('resources/bunny.png', function(img) {
+  img.set({
+    left: userPic.left + userPic.width + userOffsetX,
+    top: userPic.top,
+    width: charmAppHW,
+    height: charmAppHW,
+    originX: 'left',
+    originY: 'top',
+    visible: false
+  });
+  canvas.add(img).setActiveObject(img);
+  bunnyPic = canvas.getActiveObject();
+  bunnyPic.on('moving', function animate(){
+    canvas.deactivateAll().renderAll();
+  });
+  bunnyPic.on('selected',function (){
+    userAdded = true;
+    addUserPic.left = userPic.left + (userAdded ? (2 * (userPic.width + userOffsetX)) : (userPic.width + userOffsetX));
+    moveUsers();
+    showUsers(true);
+    showNewUsers(false);
+  });
+  bunnyPic.lockMovementX = true;
+  bunnyPic.lockMovementY = false;}
+);
+
+function getUser(name)
+{
+  for(var i=0; i<users.length; ++i)
+  {
+    if(users[i].name == name)
+    {
+      return users[i];
+    }
+  }
+}
+
 function showUsers(visible)
 {
   ryanPic.visible = visible;
@@ -781,17 +875,24 @@ function showUsers(visible)
   devinText.visible = visible;
   mattText.visible = visible;
   tomText.visible = visible;
-  addUserPic.visible = visible; 
+  addUserPic.visible = addUserSelect; 
+  gregPic.visible = userAdded && visible;
+}
+
+function showNewUsers(visible)
+{
+  bunnyPic.visible = visible;
 }
 
 function moveUsers()
 {
+  gregPic.top = userPic.top + userPic.height + userOffsetY;
   devinPic.top = userPic.top;
   mattPic.top = userPic.top;
   tomPic.top = userPic.top;
   ryanPic.top = userPic.top + userPic.height + userOffsetY;
   mikePic.top = userPic.top + userPic.height + userOffsetY;
-  addUserPic.top =  userPic.top + userPic.height + userOffsetY;
+  addUserPic.top = userPic.top + (addUserSelect ? (userAdded ? (2 * (userPic.height + userOffsetY)) : userPic.height + userOffsetY) : -userPic.height);
   devinText.top = devinPic.top + userPic.height;
   devinText.left = devinPic.left;
   mattText.top = mattPic.top + userPic.height;
@@ -802,7 +903,9 @@ function moveUsers()
   tomText.left = tomPic.left;
   mikeText.top = mikePic.top + userPic.height;
   mikeText.left = mikePic.left;
+  bunnyPic.top = userPic.top;
 }
+
 
 function postCharmMove()
 {
@@ -814,11 +917,14 @@ function postCharmMove()
   appIcon.left = appPic.left;
   settingsIcon.top = settingsPic.top;
   settingsIcon.left = settingsPic.left;
+  addUserIcon.top = addUserPic.top;
+  addUserIcon.left = addUserPic.left;
 
   userPic.setCoords();
   emergencyPic.setCoords();
   appPic.setCoords();
   settingsPic.setCoords();
+  addUserPic.setCoords();
 
   debugLog();
 
