@@ -313,6 +313,16 @@ function setTemp()
 //-----END-WEATHER------------------------------------
 
 
+function changePic(pic,src)
+{
+  fabric.util.loadImage(src, function(img) {
+    pic.setElement(img);
+    pic.width = charmAppHW;
+    pic.height = charmAppHW;
+    canvas.renderAll();
+  }); 
+}
+
 /*-----------------------------------------------------------------
 * CHARMS BAR
 *  -appIcon
@@ -339,6 +349,8 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
     moveUsers();
+    updateAppPos();
+    updateCamPos();
     debugLog();
     canvas.renderAll();
   });
@@ -346,8 +358,10 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
   userPic.on('selected', function (){
     if(userSelect){
       showUsers(true);
+      changePic(userPic,'resources/single2.png');
     }else{
       showUsers(false);
+      changePic(userPic,'resources/single.png');
     }
     moveUsers();
     userSelect = !userSelect;
@@ -386,6 +400,8 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
     appPic.top = emergencyPic.getTop() + quarterDoorHeight;
     settingsPic.top = appPic.getTop() + quarterDoorHeight;
     moveUsers();
+    updateAppPos();
+    updateCamPos();
     debugLog();
     canvas.renderAll();
   });
@@ -419,11 +435,13 @@ var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
             closeApp(apps[appIdx][0].icon);
             apps[appIdx][0].active=false;
         }
+        changePic(appPic,'resources/app.png');
         activeIcon(charmBar[0]);
         updateApps(false);
     }
     else if(charmBar[0].active==false) {
         charmBar[0].active = true;
+        changePic(appPic,'resources/app2.png');
         activeIcon(charmBar[0]);
         updateApps(true);
     }
@@ -474,6 +492,8 @@ var settingsIcon = new fabric.Image.fromURL('resources/settings.png', function(i
     appPic.top = settingsPic.getTop() - quarterDoorHeight;
     emergencyPic.top = appPic.getTop() - quarterDoorHeight;
     moveUsers();
+    updateAppPos();
+    updateCamPos();
     debugLog();
     canvas.renderAll();
   });
