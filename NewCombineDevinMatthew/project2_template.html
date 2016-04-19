@@ -332,6 +332,10 @@ function changePic(pic,src)
 *  -settingsIcon
 *  -userIcon
 *///---------------------------------------------------------------
+var isDown;
+var isUp;
+var myVar
+function myFunction(){isUp = 2;}
 
 var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
   img.set({
@@ -357,8 +361,13 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     canvas.renderAll();
   });
 
-  userPic.on('selected', function (){
-    if(userSelect){
+
+
+canvas.on('mouse:up', function(options) {
+         if (options.target == userPic){
+          clearTimeout(myVar)
+        if(isUp == 1 && isDown == 1){
+           if(userSelect){
       addUserPic.top = userPic.top + userPic.height + userOffsetY;
       addUserPic.left = userPic.left + (3 * (userPic.width + userOffsetX));
       changePic(addUserPic,'resources/addUser.png');
@@ -375,6 +384,22 @@ var userIcon = new fabric.Image.fromURL('resources/single.png', function(img) {
     userSelect = !userSelect;
     postCharmMove();
     canvas.deactivateAll();
+   
+       
+  }
+          }});
+canvas.on('mouse:down', function(options) {
+         if (options.target == userPic){
+          isDown =1;
+          isUp = 1;
+         myVar =  setTimeout(myFunction, 100)
+  }});
+
+
+
+
+  userPic.on('selected', function (){
+   
   });
 
   userPic.on('modified', function (){
@@ -422,10 +447,7 @@ var emergencyIcon =  new fabric.Image.fromURL('resources/shield.png', function(i
   emergencyPic.lockMovementY = false;}
 );
 
-var isDown;
-var isUp;
-var myVar
-function myFunction(){isUp = 2;}
+
 
 var appIcon = new fabric.Image.fromURL('resources/app.png', function(img) {
   img.set({
