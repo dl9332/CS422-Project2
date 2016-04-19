@@ -758,6 +758,18 @@ function createDoorCamApp(){
             outSideBGPic.bringForward();
           }
   );
+
+  insideBG = new fabric.Image.fromURL('resources/inside.jpg', function(img) {
+            img.set({
+              left:topLeftInsideDoor, top:0, width:doorWidth, height:localHeight, originX: 'left',
+              originY: 'top', visible: false,lockMovementX:true,lockMovementY:true
+            });
+            canvas.add(img).setActiveObject(img);
+            insideBGPic = canvas.getActiveObject();
+            insideBGPic.sendToBack();
+            insideBGPic.bringForward();
+          }
+  );
 }
 function createNoteApp(){
   iconPath = apps[4][1].fp;
@@ -1021,9 +1033,6 @@ function createNoteApp(){
 
             recNotePic = canvas.getActiveObject();
 
-            blackBox = new fabric.Rect({left:recNotePic.left+30, top:recNotePic.top+80,width:charmAppHW+150,height:charmAppHW+110,
-              originX:'left',originY:'top',visible:false,lockMovementX:true,lockMovementY:true});
-            canvas.add(blackBox);
 
             recNotePic.on('selected',function(){
               updateNoteApp(false,6);
@@ -1044,7 +1053,6 @@ function createNoteApp(){
             recPic.on('selected',function(){
               recPic2.visible=true;
               recPic.visible=false;
-              blackBox.visible=false;
               defaultNotePic.visible=true;
               canvas.deactivateAll();
 
@@ -1059,7 +1067,6 @@ function createNoteApp(){
             canvas.add(img).setActiveObject(img);
             recPic2 = canvas.getActiveObject();
             recPic2.on('selected',function(){
-              blackBox.visible=true;
               recPic.visible=true;
               recPic2.visible=false;
               defaultNotePic.visible=false;
@@ -1094,9 +1101,8 @@ function createNoteApp(){
             img.set({left: recNotePic.left+30, top: recNotePic.top+80, width: charmAppHW+150, height: charmAppHW+110, originX: 'left',
               originY: 'top', visible: false,lockMovementX:true,lockMovementY:true});
             canvas.add(img).setActiveObject(img);
-
             defaultNotePic = canvas.getActiveObject();
-            canvas.add(blackBox);
+
           }
   );
 
@@ -1331,11 +1337,13 @@ function updateCamApp(isVisible,menuId){
       mirrorPic.visible = false;
       peepPic2.visible = false;
       peepPic.visible = true;
+      insideBGPic.visible=true;
     }
     else {
       apps[3][1].active = false;
       mirrorPic2.visible = false;
       mirrorPic.visible = true;
+      insideBGPic.visible=false;
     }
   }
   else if(menuId==2){
@@ -1512,11 +1520,9 @@ function updateNoteApp(isVisible,menuId){
       recNotePic.visible=true;
       recPic.visible=true;
       backPic.visible=true;
-      blackBox.visible=true;
       recPic.bringToFront();
       backPic.bringToFront();
-      recNotePic.bringToFront();
-      blackBox.bringToFront();
+      recNotePic.bringToFront();;
       defaultNotePic.bringToFront();
       postItPic2.visible=true;
       temp =  apps[4][0].appIdx;
@@ -1530,7 +1536,6 @@ function updateNoteApp(isVisible,menuId){
       backPic.visible=false;
       recPic2.visible=false;
       postItPic2.visible=false;
-      blackBox.visible=false;
       defaultNotePic.visible=false;
     }
   }
@@ -1559,7 +1564,6 @@ function updateNoteApp(isVisible,menuId){
       recPic2.visible=false;
       camMenuPic.top = appPic.top*1.02;
       postItPic2.visible=false;
-      blackBox.visible=false;
       defaultNotePic.visible=false;
     }
 
@@ -1747,10 +1751,7 @@ function createVideoMessage(){
 
       canvas.deactivateAll();
     });
-    messageBody.active=true;
   })
-
-
 
 }
 
@@ -2316,7 +2317,8 @@ thermPic.visible = true;
 lightpic.visible = true;
 homeLockPic.visible = true;
 homeBackPic.visible = true;
-hideApps()
+updateApps(false);
+
 }
 //Hit the home back button bringing you to the main app page
 else if (menuOption ==2){
@@ -2325,8 +2327,9 @@ thermPic.visible = false;
 lightpic.visible = false;
 homeLockPic.visible = false;
 homeBackPic.visible = false;
-  showApps()
-}
+    updateApps(true);
+
+  }
 //Hit the therm button bringing up house temp menu
 else if (menuOption == 3){
   homePic2.visible = false;
@@ -2627,7 +2630,7 @@ calendarPic2.visible = true;
 monthPic.visible = true;
 toDoPic.visible = true;
 calendarBackPic.visible = true;
-hideApps()
+  updateApps(false);
 }
 //Hit back calendar to bring up main app menu
 else if(menuOption == 2){
@@ -2635,8 +2638,9 @@ calendarPic2.visible = false;
 monthPic.visible = false;
 toDoPic.visible = false;
 calendarBackPic.visible = false;
-showApps()
-}
+      updateApps(true);
+
+    }
 //Hit todo list bringing up todo list
 else if(menuOption == 3){
 calendarPic2.visible = false;
